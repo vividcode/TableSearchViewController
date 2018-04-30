@@ -15,6 +15,7 @@
 		8449E88D1DB3E263008AB013 /* TableSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8449E88B1DB3E263008AB013 /* TableSearchViewController.m */; };
 		8449E88E1DB3E263008AB013 /* TableSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8449E88C1DB3E263008AB013 /* TableSearchViewController.xib */; };
 		8449E8901DB3E27B008AB013 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8449E88F1DB3E27B008AB013 /* ViewController.xib */; };
+		84612B5B2097130F00864E11 /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 84612B5A2097130F00864E11 /* CustomObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,8 @@
 		8449E88B1DB3E263008AB013 /* TableSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TableSearchViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8449E88C1DB3E263008AB013 /* TableSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableSearchViewController.xib; sourceTree = "<group>"; };
 		8449E88F1DB3E27B008AB013 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		84612B592097130F00864E11 /* CustomObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomObject.h; sourceTree = "<group>"; };
+		84612B5A2097130F00864E11 /* CustomObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +76,8 @@
 				8449E8801DB3E249008AB013 /* LaunchScreen.storyboard */,
 				8449E8831DB3E249008AB013 /* Info.plist */,
 				8449E8721DB3E249008AB013 /* Supporting Files */,
+				84612B592097130F00864E11 /* CustomObject.h */,
+				84612B5A2097130F00864E11 /* CustomObject.m */,
 			);
 			path = TestProject;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 				8449E87A1DB3E249008AB013 /* ViewController.m in Sources */,
 				8449E8771DB3E249008AB013 /* AppDelegate.m in Sources */,
 				8449E8741DB3E249008AB013 /* main.m in Sources */,
+				84612B5B2097130F00864E11 /* CustomObject.m in Sources */,
 				8449E88D1DB3E263008AB013 /* TableSearchViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,6 +318,7 @@
 				8449E8881DB3E249008AB013 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
