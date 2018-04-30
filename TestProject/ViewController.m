@@ -27,7 +27,34 @@
 
 - (IBAction)loadNumbers:(id)sender
 {
+    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithNibName:@"TableSearchViewController" bundle:[NSBundle mainBundle]];
     
+    
+    NSArray * firstSectionArray = @[@(1), @(2), @(3)];
+    NSArray * secondSectionArray = @[@(2), @(5), @(6)];
+    
+    tableSearchViewController.resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
+    
+    tableSearchViewController.tableViewStyle = UITableViewStyleGrouped;
+    tableSearchViewController.allowSearch = YES;
+    tableSearchViewController.selectionDoneButtonTitle = @"Select";
+    tableSearchViewController.dismissButtonTitle = @"Cancel";
+    
+    tableSearchViewController.accessoryAction = ACCESSORY_ACTION_CHECK;
+    tableSearchViewController.allowSelectionCheckImage = YES;
+    tableSearchViewController.allowSelectAllCheckBox = YES;
+    tableSearchViewController.checkBoxText = @"This is extra footer checkbox.";
+    
+    tableSearchViewController.cellColorStyle = CELL_COLOR_STYLE_ALTERNATE_DOUBLE;
+    
+    tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
+    {
+        NSLog(@"%@", selectedKVCObjects);
+        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+    };
+    
+    UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
+    [self presentViewController:navCtrl animated:YES completion:nil];
 }
 
 - (IBAction)loadObjects:(id)sender
@@ -60,7 +87,7 @@
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
         NSLog(@"%@", selectedKVCObjects);
-        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects firstObject]];
+        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
     };
     
     UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];

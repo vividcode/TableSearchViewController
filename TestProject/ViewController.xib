@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
@@ -13,52 +17,52 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auC-Vv-DhJ">
-                    <rect key="frame" x="133" y="244" width="382" height="30"/>
+                    <rect key="frame" x="0.0" y="232" width="375" height="30"/>
                     <state key="normal" title="Load Numbers"/>
-                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                        <rect key="frame" x="149" y="262" width="116" height="30"/>
-                    </variation>
                     <connections>
                         <action selector="loadNumbers:" destination="-1" eventType="touchUpInside" id="Ou2-Sh-4md"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="egG-wZ-OMo">
-                    <rect key="frame" x="133" y="244" width="382" height="30"/>
+                    <rect key="frame" x="0.0" y="352" width="375" height="30"/>
                     <state key="normal" title="Load Objects"/>
-                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                        <rect key="frame" x="149" y="320" width="116" height="30"/>
-                    </variation>
                     <connections>
                         <action selector="loadObjects:" destination="-1" eventType="touchUpInside" id="mdq-lh-axB"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tPm-nA-bho">
-                    <rect key="frame" x="133" y="244" width="382" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tPm-nA-bho">
+                    <rect key="frame" x="0.0" y="112" width="375" height="30"/>
                     <state key="normal" title="Load Strings"/>
-                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                        <rect key="frame" x="149" y="209" width="116" height="30"/>
-                    </variation>
                     <connections>
                         <action selector="loadStrings:" destination="-1" eventType="touchUpInside" id="E1Q-S4-djH"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJN-Wr-EfI">
-                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                    <rect key="frame" x="0.0" y="442" width="375" height="21.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
-                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                        <rect key="frame" x="87" y="450" width="250" height="21"/>
-                    </variation>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="MJN-Wr-EfI" firstAttribute="top" secondItem="egG-wZ-OMo" secondAttribute="bottom" constant="60" id="9Wp-8d-CJg"/>
+                <constraint firstItem="MJN-Wr-EfI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Box-HA-eyj"/>
+                <constraint firstAttribute="trailing" secondItem="egG-wZ-OMo" secondAttribute="trailing" id="Dpg-Vw-mK4"/>
+                <constraint firstItem="auC-Vv-DhJ" firstAttribute="top" secondItem="tPm-nA-bho" secondAttribute="bottom" constant="90" id="Ivs-o8-LWu"/>
+                <constraint firstItem="egG-wZ-OMo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="KNI-5v-MoW"/>
+                <constraint firstItem="auC-Vv-DhJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ROE-fF-4rX"/>
+                <constraint firstItem="tPm-nA-bho" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="112" id="Th4-xK-gQy"/>
+                <constraint firstItem="egG-wZ-OMo" firstAttribute="top" secondItem="auC-Vv-DhJ" secondAttribute="bottom" constant="90" id="foA-pn-BCD"/>
+                <constraint firstAttribute="trailing" secondItem="MJN-Wr-EfI" secondAttribute="trailing" id="gAg-73-LXc"/>
+                <constraint firstAttribute="trailing" secondItem="tPm-nA-bho" secondAttribute="trailing" id="oQG-rc-uda"/>
+                <constraint firstItem="tPm-nA-bho" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="s3G-cp-BgH"/>
+                <constraint firstAttribute="trailing" secondItem="auC-Vv-DhJ" secondAttribute="trailing" id="vNp-f6-Eiw"/>
+            </constraints>
             <variation key="default">
                 <mask key="subviews">
                     <exclude reference="auC-Vv-DhJ"/>
@@ -73,6 +77,7 @@
                     <include reference="MJN-Wr-EfI"/>
                 </mask>
             </variation>
+            <point key="canvasLocation" x="24.5" y="52.5"/>
         </view>
     </objects>
 </document>
