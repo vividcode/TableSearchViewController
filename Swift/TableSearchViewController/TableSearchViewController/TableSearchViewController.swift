@@ -14,8 +14,12 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     var delegate : TableSearchViewControllerDelegate?
     
     var textLabelFormats : Array<String>
-    var textLableKeys : Array<String>
+    var textLabelKeys : Array<String>
+    var subTitleFormats : Array<String>
+    var subTitleKeys : Array<String>
     var textLabelSeparator : String
+    var subTitleSeparator : String
+    var showGroupedView : Bool
     
     private var searchArray : Array<Dictionary<String, Array<WrapperObj>>>?
     
@@ -211,11 +215,15 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     required init?(coder aDecoder: NSCoder)
     {
-       self.textLableKeys = []
+       self.textLabelKeys = []
        self.textLabelFormats = []
        self.textLabelSeparator = ""
        self.isSearching = false
        self.allowSearch = true
+       self.showGroupedView = false
+       self.subTitleKeys = []
+       self.subTitleFormats = []
+       self.subTitleSeparator = ""
        
        super.init(coder: aDecoder)
        
@@ -281,13 +289,57 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID)
+        var cell = tableView.dequeueReusableCell(withIdentifier: cellID)
         
+        if (cell == nil)
+        {
+            var style : UITableViewCellStyle
+            if (self.showGroupedView)
+            {
+                style = UITableViewCellStyle.default
+            }
+            else
+            {
+                style = UITableViewCellStyle.subtitle
+            }
+            
+            cell = UITableViewCell.init(style: style, reuseIdentifier: cellID)
+        }
         
+        let biggerArrayToIndex = (self.allowSearch && self.isSearching) ? self.searchArray : self.internalResultsArray
+        let sectionObj = biggerArrayToIndex![indexPath.section] as! Dictionary<String, Array<WrapperObj>>
+        let rowArray = sectionObj.values.first
         
+        let wrapperObj = rowArray![indexPath.row] as! WrapperObj
+        let kvcObject = wrapperObj.kvcObject
+        
+        let title = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelKeys, formatArray: self.textLabelFormats, separator: self.textLabelSeparator)
+        let subTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.subTitleKeys, formatArray: self.subTitleFormats, separator: self.subTitleSeparator)
+        
+        if (self.showGroupedView)
+        {
+            if (self.isTitleDisplayedOnPreviousRow(rowsArray: rowArray!, index: indexPath.row, title: title))
+            {
+                cell?.textLabel?.text = String(format:"%@\n     %@", "", subTitle)
+            }
+            else
+            {
+                cell?.textLabel?.text = String(format:"%@\n     %@", title, subTitle)
+            }
+        }
+        else
+        {
+            cell?.textLabel?.text = title
+            let subTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.subTitleKeys, formatArray: self.subTitleFormats, separator: self.subTitleSeparator)
+            cell?.detailTextLabel?.text = subTitle
+        }
+        
+        cell?.backgroundColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
+        cell?.textLabel?.textColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
+        cell?.detailTextLabel?.textColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
+
         return cell!
     }
-
     
     func isTitleDisplayedOnPreviousRow (rowsArray : Array<Any>, index : Int, title : String) -> Bool
     {
@@ -311,6 +363,68 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     func getFormattedStringFromDisplayKeys (kvcObject : Any, displayKeyArray : Array<String>, formatArray: Array<String>, separator : String) -> String
     {
+        if (kvcObject is String)
+        {
+            let format = formatArray.first
+            if (format != nil)
+            {
+                let valueToFormat = kvcObject as! String
+                let formattedValue = String(format:format!, valueToFormat)
+                return formattedValue
+            }
+            
+            return kvcObject as! String
+        }
+        
+        if (kvcObject is NSNumber)
+        {
+            let format = formatArray.first
+            if (format != nil)
+            {
+                let valueToFormat = kvcObject as! String
+                let formattedValue = String(format:format!, valueToFormat)
+                return formattedValue
+            }
+            
+            return String(format:"%@", kvcObject as! CVarArg)
+        }
+        
+        var retString = "" as! String
+        
+        for (idx, element) in displayKeyArray.enumerated()
+        {
+            let key = displayKeyArray[idx] as! String
+            let format = formatArray[idx] as! String
+            var valueToAppend = self.getValueFromKVCObject(kvcObject: kvcObject as! AnyObject, key: key) as! String
+            
+            if (format != nil)
+            {
+                valueToAppend = String(format:format, valueToAppend)
+            }
+            
+            retString.append(valueToAppend)
+            
+            if ((idx != displayKeyArray.count - 1) && (!separator.isEmpty))
+            {
+                retString.append(separator)
+            }
+        }
+        
+        return retString
+    }
+    
+    func getValueFromKVCObject(kvcObject : AnyObject, key : String) -> String
+    {
+        if (kvcObject.responds(to: #selector(value(forKey:))))
+        {
+            return kvcObject.value(forKey: key) as! String
+        }
+        
+        if (kvcObject is Dictionary<String, AnyObject>)
+        {
+            return (kvcObject as! Dictionary)[key]!
+        }
+
         return ""
     }
 }
