@@ -15,6 +15,7 @@
 		847BFDB72098696900BE17DC /* TableSearchViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847BFDB62098696900BE17DC /* TableSearchViewControllerDelegate.swift */; };
 		847BFDB920986CB200BE17DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847BFDB820986CB200BE17DC /* UIViewController.swift */; };
 		847BFDBB209877AC00BE17DC /* WrapperObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847BFDBA209877AC00BE17DC /* WrapperObj.swift */; };
+		AB816BEA2099BB1500DE80AD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB816BE92099BB1500DE80AD /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		847BFDB62098696900BE17DC /* TableSearchViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSearchViewControllerDelegate.swift; sourceTree = "<group>"; };
 		847BFDB820986CB200BE17DC /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		847BFDBA209877AC00BE17DC /* WrapperObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrapperObj.swift; sourceTree = "<group>"; };
+		AB816BE92099BB1500DE80AD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				847BFDB62098696900BE17DC /* TableSearchViewControllerDelegate.swift */,
 				847BFD9D20985F7000BE17DC /* TableSearchViewController.swift */,
 				847BFDBA209877AC00BE17DC /* WrapperObj.swift */,
+				AB816BE92099BB1500DE80AD /* Constants.swift */,
 			);
 			path = TableSearchViewController;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				847BFDAE2098608A00BE17DC /* ViewController.swift in Sources */,
 				847BFD9E20985F7000BE17DC /* TableSearchViewController.swift in Sources */,
 				847BFD9C20985F7000BE17DC /* AppDelegate.swift in Sources */,
+				AB816BEA2099BB1500DE80AD /* Constants.swift in Sources */,
 				847BFDB920986CB200BE17DC /* UIViewController.swift in Sources */,
 				847BFDBB209877AC00BE17DC /* WrapperObj.swift in Sources */,
 			);
