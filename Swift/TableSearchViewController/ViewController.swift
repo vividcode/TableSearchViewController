@@ -44,27 +44,31 @@ class ViewController: UIViewController {
     
     @IBAction func loadObjects(_ sender: Any)
     {
-        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
-        let obj1 = MyObject(text: "one", num: 1)
-        let obj2 = MyObject(text: "two", num: 2)
-        let obj3 = MyObject(text: "three", num: 3)
-
+        //TODO: KVC is not available for Swift yet.
         
-        
-        let obj4 = MyObject(text: "four", num: 4)
-        let obj5 = MyObject(text: "five", num: 5)
-        let obj6 = MyObject(text: "six", num: 6)
-
-        tableVC.textLabelKeys = ["text"]
-        tableVC.subTitleKeys = ["num"]
-        
-        tableVC.resultsArray = [["First": [obj1, obj2, obj3]], ["Second": [obj3, obj4, obj5, obj6]]]
-        
-        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
-        
-        self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
-        })
+//        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+//        let obj1 = MyObject(text: "one", num: 1)
+//        let obj2 = MyObject(text: "two", num: 2)
+//        let obj3 = MyObject(text: "three", num: 3)
+//
+//        print(obj1)
+//        print(obj2.description)
+//        print(obj3.description)
+//
+//        let obj4 = MyObject(text: "four", num: 4)
+//        let obj5 = MyObject(text: "five", num: 5)
+//        let obj6 = MyObject(text: "six", num: 6)
+//
+//        tableVC.textLabelKeys = ["text"]
+//        tableVC.subTitleKeys = ["num"]
+//
+//        tableVC.resultsArray = [["First": [obj1, obj2, obj3]], ["Second": [obj3, obj4, obj5, obj6]]]
+//
+//        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+//
+//        self.navigationController?.present(tableNavVC, animated: true, completion: {
+//            print("presented")
+//        })
     }
     
     override func didReceiveMemoryWarning()

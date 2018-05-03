@@ -8,7 +8,20 @@
 
 import Foundation
 
-struct MyObject {
-    var text : String
-    var num : Int
+class MyObject : NSObject
+{
+    var text : NSString = ""
+    var num : Int = 0
+    
+    init(text : String, num : Int)
+    {
+        self.text = NSString.init(string: text)
+        self.num = num
+    }
+    
+    override var description: String
+    {
+        let textProp = self.value(forKey: "MyObject.text") as! String
+        return textProp
+    }
 }

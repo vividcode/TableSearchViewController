@@ -19,8 +19,27 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var textLabelFormats : Array<String>
     var textLabelKeys : Array<String>
+    {
+        didSet
+        {
+            for textLabelKey in self.textLabelKeys
+            {
+                self.textLabelFormats.append("")
+            }
+        }
+    }
     var subTitleFormats : Array<String>
+  
     var subTitleKeys : Array<String>
+    {
+        didSet
+        {
+            for subTitleKey in self.subTitleKeys
+            {
+                self.subTitleFormats.append("")
+            }
+        }
+    }
     var textLabelSeparator : String
     var subTitleSeparator : String
     var showGroupedView : Bool
@@ -418,38 +437,40 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                 return formattedValue
             }
             
-            return String(format:"%@", kvcObject as! CVarArg)
+            return String(NSString.init(format: "%@", kvcObject as! NSNumber))
         }
         
-        var retString = "" as! String
-        
-        for (idx, element) in displayKeyArray.enumerated()
-        {
-            let key = displayKeyArray[idx] as! String
-            let format = formatArray[idx] as! String
-            var valueToAppend = self.getValueFromKVCObject(kvcObject: kvcObject as! AnyObject, key: key) as! String
-            
-            if (format != nil)
-            {
-                valueToAppend = String(format:format, valueToAppend)
-            }
-            
-            retString.append(valueToAppend)
-            
-            if ((idx != displayKeyArray.count - 1) && (!separator.isEmpty))
-            {
-                retString.append(separator)
-            }
-        }
-        
-        return retString
+        return ""
+//        var retString = "" as! String
+//
+//        for (idx, element) in displayKeyArray.enumerated()
+//        {
+//            let key = displayKeyArray[idx] as! String
+//            let format = formatArray[idx] as! String
+//            var valueToAppend = self.getValueFromKVCObject(kvcObject: kvcObject as! AnyObject, key: key) as! String
+//
+//            if (format != nil)
+//            {
+//                valueToAppend = String(format:format, valueToAppend)
+//            }
+//
+//            retString.append(valueToAppend)
+//
+//            if ((idx != displayKeyArray.count - 1) && (!separator.isEmpty))
+//            {
+//                retString.append(separator)
+//            }
+//        }
+//
+//        return retString
     }
     
     func getValueFromKVCObject(kvcObject : AnyObject, key : String) -> String
     {
-        if (kvcObject.responds(to: #selector(value(forKey:))))
+        if (kvcObject is NSObject)
         {
-            return kvcObject.value(forKey: key) as! String
+            let obj = kvcObject as! NSObject
+            return obj.value(forKey: key) as! String
         }
         
         if (kvcObject is Dictionary<String, AnyObject>)
