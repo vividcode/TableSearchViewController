@@ -21,6 +21,7 @@ class ViewController: UIViewController {
         let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
         
         tableVC.resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
+        tableVC.allowSearch = true
         
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
@@ -34,6 +35,7 @@ class ViewController: UIViewController {
         let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
         
         tableVC.resultsArray = [["First": [1,2,3]], ["Second": [2,5,6,7]]]
+        tableVC.allowSearch = true
         
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         

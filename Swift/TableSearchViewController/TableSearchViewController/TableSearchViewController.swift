@@ -11,11 +11,13 @@ import UIKit
 typealias SelectionDoneClosure = (Array<Any>, Bool) -> Void
 typealias DismissClosure = (String) -> Void
 
-class TableSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class TableSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
 {
     @IBOutlet weak var tableView: UITableView!
     private var internalResultsArray : Array<Dictionary<String, Array<WrapperObj>>>?
     var delegate : TableSearchViewControllerDelegate?
+    var searchBar : UISearchBar?
+    var searchBarPlaceHolderText : String?
     
     var textLabelFormats : Array<String>
     var textLabelKeys : Array<String>
@@ -59,6 +61,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var allowSearch : Bool
     
+    // MARK: Computed Properties
     var cellColorStyle : CellColorStyle?
     {
         didSet
@@ -184,7 +187,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var accessoryImages : Array<UIImage>?
 
-    
+    // MARK: Inits
     required init?(coder aDecoder: NSCoder)
     {
        self.textLabelKeys = []
@@ -257,12 +260,14 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureNavBar()
+        self.createSearchBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
     }
     
+    // MARK: NAV BAR
     func configureNavBar()
     {
         if (!self.selectionDoneButtonTitle.isEmpty)
@@ -297,6 +302,105 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: Search Bar
+    func createSearchBar()
+    {
+        if (self.allowSearch)
+        {
+            self.searchBar = UISearchBar.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: NAVBAR_HEIGHT))
+            self.searchBar?.delegate = self
+            
+            var subViews = self.searchBar?.subviews
+            for subView in subViews!
+            {
+                if (subView is UITextField)
+                {
+                    let searchField = subView as! UITextField
+                    searchField.returnKeyType = UIReturnKeyType.search
+                    searchField.autocorrectionType = UITextAutocorrectionType.no
+                    searchField.autocapitalizationType = UITextAutocapitalizationType.none
+                    break
+                }
+                else
+                {
+                    subViews = subView.subviews
+                }
+            }
+            
+            self.searchBar?.placeholder = self.searchBarPlaceHolderText
+            self.tableView.tableHeaderView = self.searchBar
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        self.isSearching = !searchText.isEmpty
+        
+        if (self.isSearching)
+        {
+            self.searchArray = self.searchTextInTableRows(searchText: searchText)
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    func searchTextInTableRows (searchText : String) -> Array<Dictionary<String, Array<WrapperObj>>>
+    {
+        var searchResultArray = Array<Dictionary<String, Array<WrapperObj>>>()
+        
+        for sectionObj in self.internalResultsArray!
+        {
+            let sectionTitle = sectionObj.keys.first
+            let sectionRows = sectionObj.values.first
+            
+            let wrapperObj = sectionRows?.first
+            let kvcObject = wrapperObj?.kvcObject
+            
+            var filteredRowsArray : Array<WrapperObj>?
+            if (kvcObject is String)
+            {
+                filteredRowsArray = sectionRows?.filter
+                {
+                    let wrapperObjectSample = $0 as? WrapperObj
+                    let kvcString = wrapperObjectSample?.kvcObject as! String
+                    return kvcString.contains(searchText)
+                }
+            }
+            else if (kvcObject is NSNumber)
+            {
+                let nf = NumberFormatter.init()
+                nf.numberStyle = .decimal
+                let searchTextNumber = nf.number(from: searchText)
+                let startRange = NSNumber.init(value: floor((searchTextNumber?.doubleValue)!))
+                let endRange =  NSNumber.init(value: startRange.doubleValue + 0.99)
+
+                filteredRowsArray = sectionRows?.filter
+                {
+                    let wrapperObjectSample = $0 as? WrapperObj
+                    let kvcNumber = wrapperObjectSample?.kvcObject as? NSNumber
+                
+                    return (((kvcNumber?.doubleValue)! == searchTextNumber?.doubleValue) ||
+                    ((kvcNumber?.doubleValue)! >= startRange.doubleValue) &&
+                    ((kvcNumber?.doubleValue)! <= endRange.doubleValue))
+                }
+            }
+            else
+            {
+                continue
+            }
+
+            searchResultArray.append([sectionTitle!:filteredRowsArray!])
+        }
+        
+        return searchResultArray
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar?.text = ""
+        self.view.endEditing(true)
+    }
+    
+    // MARK: Table View
     func numberOfSections(in tableView: UITableView) -> Int {
         if (self.allowSearch && self.isSearching)
         {
