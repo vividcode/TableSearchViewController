@@ -20,19 +20,51 @@ class ViewController: UIViewController {
     {
         let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
         
-        tableVC.resultsArray = [["1": [1,3,4]], ["2": [1,3,6]]]
+        tableVC.resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
         
-        self.navigationController?.present(tableVC, animated: true, completion: {
+        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+        
+        self.navigationController?.present(tableNavVC, animated: true, completion: {
             print("presented")
         })
     }
     
     @IBAction func loadNumbers(_ sender: Any)
     {
+        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+        
+        tableVC.resultsArray = [["First": [1,2,3]], ["Second": [2,5,6,7]]]
+        
+        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+        
+        self.navigationController?.present(tableNavVC, animated: true, completion: {
+            print("presented")
+        })
     }
     
     @IBAction func loadObjects(_ sender: Any)
     {
+        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+        let obj1 = MyObject(text: "one", num: 1)
+        let obj2 = MyObject(text: "two", num: 2)
+        let obj3 = MyObject(text: "three", num: 3)
+
+        
+        
+        let obj4 = MyObject(text: "four", num: 4)
+        let obj5 = MyObject(text: "five", num: 5)
+        let obj6 = MyObject(text: "six", num: 6)
+
+        tableVC.textLabelKeys = ["text"]
+        tableVC.subTitleKeys = ["num"]
+        
+        tableVC.resultsArray = [["First": [obj1, obj2, obj3]], ["Second": [obj3, obj4, obj5, obj6]]]
+        
+        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+        
+        self.navigationController?.present(tableNavVC, animated: true, completion: {
+            print("presented")
+        })
     }
     
     override func didReceiveMemoryWarning()

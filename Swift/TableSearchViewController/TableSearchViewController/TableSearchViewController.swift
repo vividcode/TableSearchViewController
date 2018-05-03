@@ -8,8 +8,12 @@
 
 import UIKit
 
+typealias SelectionDoneClosure = (Array<Any>, Bool) -> Void
+typealias DismissClosure = (String) -> Void
+
 class TableSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
+    @IBOutlet weak var tableView: UITableView!
     private var internalResultsArray : Array<Dictionary<String, Array<WrapperObj>>>?
     var delegate : TableSearchViewControllerDelegate?
     
@@ -20,49 +24,36 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     var textLabelSeparator : String
     var subTitleSeparator : String
     var showGroupedView : Bool
+    var extraFlagSelected : Bool
+    
+    var selectionDoneBlock: SelectionDoneClosure
+    var dismissBlock : DismissClosure
+
+    var screenTitle : String
+    var selectionDoneButtonTitle : String
+    var dismissButtonTitle : String
     
     private var searchArray : Array<Dictionary<String, Array<WrapperObj>>>?
     
     private var isSearching : Bool
+    private var selectedObjects : Array<Any>
     
     var allowSearch : Bool
     
     var cellColorStyle : CellColorStyle?
     {
-        get
+        didSet
         {
-            return self.cellColorStyle
-        }
-        set(newVal)
-        {
-            self.cellColorStyle = newVal
-        }
-    }
-    
-    var cellColorArray : Array<UIColor>?
-    {
-        get
-        {
-            return self.cellColorArray
-        }
-        set(newVal)
-        {
-            if (newVal != nil)
-            {
-                self.cellColorArray = newVal
-                return
-            }
-            
-            if (self.cellColorStyle == CellColorStyle.CELL_COLOR_STYLE_UNIFORM)
+            if (cellColorStyle == CellColorStyle.CELL_COLOR_STYLE_UNIFORM)
             {
                 self.cellColorArray = [UIColor.init(named: UIColor.ColorName.OFFWHITE)]
             }
-            else if (self.cellColorStyle == CellColorStyle.CELL_COLOR_STYLE_ALTERNATE_DOUBLE)
+            else if (cellColorStyle == CellColorStyle.CELL_COLOR_STYLE_ALTERNATE_DOUBLE)
             {
                 self.cellColorArray = [UIColor.init(named: UIColor.ColorName.OFFWHITE),
                                        UIColor.init(named: UIColor.ColorName.LIGHTGRAY)]
             }
-            else if (self.cellColorStyle == CellColorStyle.CELL_COLOR_STYLE_ALTERNATE_TRIPLE)
+            else if (cellColorStyle == CellColorStyle.CELL_COLOR_STYLE_ALTERNATE_TRIPLE)
             {
                 self.cellColorArray = [UIColor.init(named: UIColor.ColorName.GRAY),
                                        UIColor.init(named: UIColor.ColorName.OFFWHITE),
@@ -71,36 +62,21 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
+    var cellColorArray : Array<UIColor>?
     
-    var sectionColorStyle : SectionColorStyle
+    var sectionColorStyle : SectionColorStyle?
     {
-        get
+        didSet
         {
-            return self.sectionColorStyle
-        }
-        set(newVal)
-        {
-            self.sectionColorStyle = newVal
+            if (sectionColorStyle == SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM)
+            {
+                self.sectionColorArray = [UIColor.init(named: UIColor.ColorName.OFFWHITE)]
+            }
         }
     }
     
     var sectionColorArray : Array<(UIColor)>?
-    {
-        get
-        {
-            return self.sectionColorArray
-        }
-        set(newVal)
-        {
-            if (newVal != nil)
-            {
-                self.sectionColorArray = newVal
-                return
-            }
-            
-            self.sectionColorArray = [UIColor.init(named: UIColor.ColorName.BROWN)]
-        }
-    }
+    
     
     var resultsArray : Array<Dictionary<String, Array<Any>>>?
     {
@@ -154,13 +130,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var allowSelectionImages : Bool
     {
-        get
+        didSet(newVal)
         {
-            return self.allowSelectionImages
-        }
-        set(newVal)
-        {
-            self.allowSelectionImages = newVal
             self.allowSelectionCheckMark = !newVal
             
             if (newVal == true)
@@ -176,12 +147,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var accessoryImageNames : Array<String>?
     {
-        get
-        {
-            return self.accessoryImageNames
-        }
-        
-        set(newVal)
+        didSet(newVal)
         {
             if (newVal != nil)
             {
@@ -198,20 +164,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     var accessoryImages : Array<UIImage>?
-    {
-        get
-        {
-            return self.accessoryImages
-        }
-        
-        set (newVal)
-        {
-            if (newVal != nil)
-            {
-                self.accessoryImages = newVal
-            }
-        }
-    }
+
     
     required init?(coder aDecoder: NSCoder)
     {
@@ -224,21 +177,100 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
        self.subTitleKeys = []
        self.subTitleFormats = []
        self.subTitleSeparator = ""
+       self.screenTitle = "Select a Record"
+       self.selectionDoneButtonTitle = "Done"
+       self.dismissButtonTitle = "Cancel"
+       self.selectionDoneBlock = { (selectedObjects, bExtraFlag) in
+            print("selected Objects:\(selectedObjects)")
+       }
+        self.dismissBlock = { (info) in
+            print("\(info)")
+        }
        
+       self.allowSelectionImages = true
+       
+        self.selectedObjects = []
+       self.extraFlagSelected = false
        super.init(coder: aDecoder)
        
        self.delegate = nil
        self.resultsArray = nil
        self.cellColorStyle = CellColorStyle.CELL_COLOR_STYLE_UNIFORM
        self.sectionColorStyle = SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM
-       self.cellColorArray = nil
-       self.sectionColorArray = nil
+
        self.allowSelectionImages = true
+    }
+    
+    init(resultsArray : Array<Dictionary<String, Array<Any>>>, screenTitle : String, doneButtonTitle : String, cancelButtonTitle : String, selectionDoneBlock : @escaping SelectionDoneClosure, dismissBlock : @escaping DismissClosure) {
+        
+        self.textLabelKeys = []
+        self.textLabelFormats = []
+        self.textLabelSeparator = ""
+        self.isSearching = false
+        self.allowSearch = true
+        self.showGroupedView = false
+        self.subTitleKeys = []
+        self.subTitleFormats = []
+        self.subTitleSeparator = ""
+        
+        self.screenTitle = screenTitle
+        self.selectionDoneButtonTitle = doneButtonTitle
+        self.dismissButtonTitle = cancelButtonTitle
+        
+        self.allowSelectionImages = true
+        
+        self.selectionDoneBlock = selectionDoneBlock
+        self.dismissBlock = dismissBlock
+        
+        self.selectedObjects = []
+        self.extraFlagSelected = false
+        
+        super.init(nibName: "TableSearchViewController", bundle: Bundle.main)
+        
+        self.delegate = nil
+        self.resultsArray = nil
+        self.cellColorStyle = CellColorStyle.CELL_COLOR_STYLE_UNIFORM
+        self.sectionColorStyle = SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM
+
+        self.allowSelectionImages = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        self.configureNavBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.tableView.reloadData()
+    }
+    
+    func configureNavBar()
+    {
+        if (!self.selectionDoneButtonTitle.isEmpty)
+        {
+            let doneButton = UIBarButtonItem.init(title: self.selectionDoneButtonTitle, style: UIBarButtonItemStyle.done, target: self, action: #selector(self.doneTapped))
+            self.navigationItem.rightBarButtonItem = doneButton
+        }
+        
+        if (!self.dismissButtonTitle.isEmpty)
+        {
+            let dismissButton = UIBarButtonItem.init(title: self.dismissButtonTitle, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancelTapped))
+            self.navigationItem.leftBarButtonItem = dismissButton
+        }
+    }
+    
+    @objc func doneTapped(sender : AnyObject)
+    {
+        self.navigationController?.dismiss(animated: true, completion: {
+            self.selectionDoneBlock(self.selectedObjects, self.extraFlagSelected)
+        })
+    }
+    
+    @objc func cancelTapped(sender : AnyObject)
+    {
+        self.navigationController?.dismiss(animated: true, completion: {
+            self.dismissBlock("Dismissed TableSearchViewController: ")
+        })
     }
 
     override func didReceiveMemoryWarning() {
