@@ -1,1 +1,4 @@
-Duplicate selection does not work with NSStrings and NSNumber objects. To fix, use NSDictionary or any other KVC compliant object.
+TableSearchViewController is a very powerful UIViewController with UITableView that allows user to select, search and delete a number of NSObject derived objects.
+
+For full understanding of how it works, please refer to:
+http://www.iphonegamezone.net/select-search-delete-uitableview-powerful-viewcontroller/
