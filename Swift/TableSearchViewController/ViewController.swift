@@ -44,6 +44,29 @@ class ViewController: UIViewController {
         })
     }
     
+    @IBAction func loadDictionaries (_ sender: Any)
+    {
+        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+       
+        let dict1 = ["text": "Mytext1", "num" : 1] as [String : Any]
+        let dict2 = ["text": "Mytext2", "num" : 2] as [String : Any]
+        let dict3 = ["text": "Mytext3", "num" : 3] as [String : Any]
+        let dict4 = ["text": "Mytext4", "num" : 4] as [String : Any]
+        let dict5 = ["text": "Mytext6", "num" : 5] as [String : Any]
+        let dict6 = ["text": "Mytext7", "num" : 6] as [String : Any]
+
+        tableVC.textLabelKeys = ["text"]
+        tableVC.subTitleKeys = ["num"]
+
+        tableVC.resultsArray = [["First": [dict1, dict2, dict3]], ["Second": [dict3, dict4, dict5, dict6]]]
+
+        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+
+        self.navigationController?.present(tableNavVC, animated: true, completion: {
+            print("presented")
+        })
+    }
+    
     @IBAction func loadObjects(_ sender: Any)
     {
         //TODO: KVC is not available for Swift yet.

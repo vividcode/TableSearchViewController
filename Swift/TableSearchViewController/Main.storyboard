@@ -34,9 +34,9 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hyP-Pl-fft">
                                 <rect key="frame" x="0.0" y="352" width="375" height="30"/>
-                                <state key="normal" title="Load Objects"/>
+                                <state key="normal" title="Load Dictionaries"/>
                                 <connections>
-                                    <action selector="loadObjects:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="xaE-3k-1pS"/>
+                                    <action selector="loadDictionaries:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="bY2-1R-Atp"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3L-aM-YG2">

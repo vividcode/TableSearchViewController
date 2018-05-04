@@ -521,10 +521,10 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         if (kvcObject is String)
         {
             let format = formatArray.first
-            if (format != nil)
+            if (!(format?.isEmpty)!)
             {
                 let valueToFormat = kvcObject as! String
-                let formattedValue = String(format:format!, valueToFormat)
+                let formattedValue = String(format:(format)!, valueToFormat)
                 return formattedValue
             }
             
@@ -534,7 +534,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         if (kvcObject is NSNumber)
         {
             let format = formatArray.first
-            if (format != nil)
+            if (!(format?.isEmpty)!)
             {
                 let valueToFormat = kvcObject as! String
                 let formattedValue = String(format:format!, valueToFormat)
@@ -544,42 +544,46 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             return String(NSString.init(format: "%@", kvcObject as! NSNumber))
         }
         
+        if ((kvcObject is NSDictionary) || (kvcObject is Dictionary<String, AnyObject>))
+        {
+            var retString = ""
+            
+            for (idx, _) in displayKeyArray.enumerated()
+            {
+                let key = displayKeyArray[idx]
+                let format = formatArray[idx]
+                var valueToAppend = self.getValueFromKVCObject(kvcObject: kvcObject as AnyObject, key: key)
+                
+                if (!format.isEmpty)
+                {
+                    valueToAppend = String(format:format, valueToAppend)
+                }
+                
+                retString.append(valueToAppend)
+                
+                if ((idx != displayKeyArray.count - 1) && (!separator.isEmpty))
+                {
+                    retString.append(separator)
+                }
+            }
+            return retString
+        }
+        
         return ""
-//        var retString = "" as! String
-//
-//        for (idx, element) in displayKeyArray.enumerated()
-//        {
-//            let key = displayKeyArray[idx] as! String
-//            let format = formatArray[idx] as! String
-//            var valueToAppend = self.getValueFromKVCObject(kvcObject: kvcObject as! AnyObject, key: key) as! String
-//
-//            if (format != nil)
-//            {
-//                valueToAppend = String(format:format, valueToAppend)
-//            }
-//
-//            retString.append(valueToAppend)
-//
-//            if ((idx != displayKeyArray.count - 1) && (!separator.isEmpty))
-//            {
-//                retString.append(separator)
-//            }
-//        }
-//
-//        return retString
     }
     
     func getValueFromKVCObject(kvcObject : AnyObject, key : String) -> String
     {
-        if (kvcObject is NSObject)
-        {
-            let obj = kvcObject as! NSObject
-            return obj.value(forKey: key) as! String
-        }
-        
         if (kvcObject is Dictionary<String, AnyObject>)
         {
-            return (kvcObject as! Dictionary)[key]!
+            let obj = (kvcObject as! Dictionary<String, AnyObject>)[key] as! NSObject
+            
+            return obj.description
+        }
+        else if (kvcObject is NSDictionary)
+        {
+            let obj = (kvcObject as! NSDictionary) .object(forKey: key) as! NSObject
+            return obj.description
         }
 
         return ""
