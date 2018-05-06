@@ -41,9 +41,10 @@ To create UITableView with above objects with possible search through rows also,
 When you run the above code, a viewcontroller pops up (presented) and allows you to select objects of your choices, like below.
 
 ![alt text](https://github.com/vividcode/TableSearchViewController/blob/master/Resources/example1.png "Selectable Strings in table view")
+
 Upon pressing Select, TableSearchViewController gets dismissed, and tableSearchViewController.selectionDoneBlock block executes, and selected objects (NSString) are supplied inside the block as part of NSArray.
 
-Note that resultsArray can also accept any NSObject derived objects, in which case you must supply specific property name to display in table rows. 
+Note that resultsArray dictinaries can also accept any NSObject derived objects, in which case you must supply specific property name to display in table rows. 
 This property name must be supplied in the property textLabelKeys which is an array of properties to display inside UITableViewCell textLabel.
 Similarly, subTitleKeys array property holds properties to display inside UITableViewCell textLabel.
 Display formats can be supplied using textLableFormats and subTitleFormats Arrays.
