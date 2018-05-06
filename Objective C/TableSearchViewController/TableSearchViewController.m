@@ -42,6 +42,7 @@
 
 @interface TableSearchViewController ()
 {
+    NSArray<NSDictionary<NSString *, NSArray<NSObject*>*> *> * _Nullable _searchArray;
     NSMutableArray* accessoryActionResultsArray;
     NSMutableArray* selectedResultsArray;
     bool footerCheckedStatus;
@@ -79,8 +80,61 @@ static NSString * cellID = @"CellIdentifier";
 }
 
 #pragma mark-
+#pragma mark Init
+-(instancetype) initWithCellColorStyle:(CELLCOLORSTYLE)cellColorStyle andSectionColorStyle:(SECTIONCOLORSTYLE) sectionColorStyle andAllowSelectionCheckMark:(BOOL)bAllowSelectionCheckMark andAllowSelectAllCheckBox:(BOOL)bAllowSelectAllCheckBox andAllowSearch:(BOOL)bAllowSearch andAccessoryAction:(ACCESSORY_ACTION)accessoryAction andFooterText:(NSString*)footerText andResultsArray:(NSArray*)resultsArray
+{
+    if (self == [self initWithNibName:@"TableSearchViewController" bundle:[NSBundle mainBundle]])
+    {
+        self.resultsArray = resultsArray;
+        self.sectionColorStyle = sectionColorStyle;
+        self.cellColorStyle = cellColorStyle;
+        
+        self.accessoryAction = accessoryAction;
+        
+        self.allowSelectionCheckMark = bAllowSelectionCheckMark;  //false will set check/uncheck images automatically.
+        self.allowSelectAllCheckBox = bAllowSelectAllCheckBox;  //true will set "select All" images automatically.
+        
+        self.checkBoxText = footerText;
+        
+        self.allowSearch = bAllowSearch;
+        
+        [self commonInitDefaults];
+    }
+    
+    return self;
+}
+
+-(void)commonInitDefaults
+{
+
+    self.selectionDoneButtonTitle = @"Select";
+    self.dismissButtonTitle = @"Cancel";
+    
+    self.searchKeys = @[@"SELF"];
+    
+    self.textLabelKeys = @[@"SELF"];
+    self.subTitleKeys = @[@"SELF"];
+    self.textLableFormats = @[@"%@"];
+    self.subTitleFormats = @[@"%@"];
+}
+
+#pragma mark-
 #pragma mark setters
--(void)setCellColorStyle:(cellColorStyle)cellColorStyle
+- (void)setAccessoryAction:(ACCESSORY_ACTION)accessoryAction
+{
+    _accessoryAction = accessoryAction;
+    
+    if (accessoryAction == ACCESSORY_ACTION_DELETE)
+    {
+        self.accessoryPromptMessageText = @"Are you sure you want to Delete:%@?";
+        NSString * appDisplayName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+        self.accessoryPromptMessageTitle = appDisplayName;
+        self.accessoryPromptOKButtonTitle = @"OK";
+        self.accessoryPromptCancelButtonTitle = @"Cancel";
+    }
+}
+
+-(void)setCellColorStyle:(CELLCOLORSTYLE)cellColorStyle
 {
     UIColor * gray = [UIColor colorWithRed:177/255.0f green:177/255.0f blue:177/255.0f alpha:1.0];
     UIColor * offWhite = [UIColor colorWithRed:247/255.0f green:241/255.0f blue:234/255.0f alpha:1.0];
@@ -104,7 +158,7 @@ static NSString * cellID = @"CellIdentifier";
     _cellColorStyle = cellColorStyle;
 }
 
-- (void)setSectionColorStyle:(sectionColorStyle)sectionColorStyle
+- (void)setSectionColorStyle:(SECTIONCOLORSTYLE)sectionColorStyle
 {
     UIColor * brown = [UIColor colorWithRed:212/255.0f green:172/255.0f blue:106/255.0f alpha:1.0];
     
@@ -120,6 +174,8 @@ static NSString * cellID = @"CellIdentifier";
     _allowSelectionCheckMark = allowSelectionCheckMark;
     _allowSelectionCheckImage = !allowSelectionCheckMark;
     
+    [self updateAccessoryImagesArray:_allowSelectionCheckImage withAccessoryActionType:self.accessoryAction];
+    
     [self updatedSelectedStatusForKVCObjects];
 }
 
@@ -128,12 +184,32 @@ static NSString * cellID = @"CellIdentifier";
     _allowSelectionCheckImage = allowSelectionCheckImage;
     _allowSelectionCheckMark = !allowSelectionCheckImage;
     
-    if (self.accessoryImages.count < 2)
-    {
-        self.accessoryImages = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"uncheckbox.png"], [UIImage imageNamed:@"checkbox.png"], nil];
-    }
+    [self updateAccessoryImagesArray:_allowSelectionCheckImage withAccessoryActionType:self.accessoryAction];
     
     [self updatedSelectedStatusForKVCObjects];
+}
+
+-(void)updateAccessoryImagesArray : (BOOL) bAllowAccessoryImages withAccessoryActionType : (ACCESSORY_ACTION) accessoryAction
+{
+    if (bAllowAccessoryImages)
+    {
+        if (self.accessoryAction == ACCESSORY_ACTION_CHECK)
+        {
+            self.accessoryImages = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"uncheckbox"], [UIImage imageNamed:@"checkbox"], nil];
+        }
+        else if (self.accessoryAction == ACCESSORY_ACTION_DELETE)
+        {
+            self.accessoryImages = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"delete"], nil];
+        }
+        else
+        {
+            self.accessoryImages = nil;
+        }
+    }
+    else
+    {
+        self.accessoryImages = nil;
+    }
 }
 
 //Select all
@@ -141,9 +217,16 @@ static NSString * cellID = @"CellIdentifier";
 {
     _allowSelectAllCheckBox = allowSelectAllCheckBox;
    
-    if (self.selectAllImages.count < 2)
+    if (self.accessoryAction == ACCESSORY_ACTION_CHECK)
     {
-        self.selectAllImages = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"uncheckbox.png"], [UIImage imageNamed:@"checkbox.png"], nil];
+        if (self.selectAllImages == nil)
+        {
+            self.selectAllImages = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"uncheckbox"], [UIImage imageNamed:@"checkbox"], nil];
+        }
+    }
+    else if (self.accessoryAction == ACCESSORY_ACTION_DELETE)
+    {
+        self.selectAllImages = nil; //no effect as of now, delete all isn't allowed.
     }
     
     [self updatedSelectedStatusForKVCObjects];
@@ -153,7 +236,7 @@ static NSString * cellID = @"CellIdentifier";
 //                {"Section Title 2":[row3ManagedObj, row4ManagedObj}
 //internalResultsArray => {"Section Title 1":[{"checked":0,"kvcObject":row1ManagedObj}, {"checked":0,"kvcObject":row2ManagedObj}]},
 //                        {"Section Title 2":[{"checked":0,"kvcObject":row3ManagedObj}, {"checked":0,"kvcObject":row4ManagedObj}]}
-- (void)setResultsArray:(NSArray *)resultsArray
+- (void)setResultsArray:(NSArray<NSDictionary<NSString *, NSArray<NSObject*>*> *>*)resultsArray
 {
     if (!resultsArray || (resultsArray.count == 0))
     {
@@ -553,7 +636,7 @@ static NSString * cellID = @"CellIdentifier";
     if([searchText length] != 0)
     {
         self.isSearching = YES;
-        self.searchArray = [self searchTextInTableRows:searchText];
+        _searchArray = [self searchTextInTableRows:searchText];
     }
     else
     {
@@ -577,7 +660,7 @@ static NSString * cellID = @"CellIdentifier";
     CGFloat fixedFooterHeight = NAVBAR_HEIGHT;
     CGRect tableViewFrame = CGRectMake(CGRectGetMinX(self.view.bounds), CGRectGetMinY(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - fixedFooterHeight - 44);
     
-    self.tableView = [[UITableView alloc] initWithFrame:tableViewFrame style:self.tableViewStyle];
+    self.tableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
     [self.tableView setDataSource:self];
     [self.tableView setDelegate:self];
     [self.view addSubview:self.tableView];
@@ -616,7 +699,7 @@ static NSString * cellID = @"CellIdentifier";
         checkBoxView = [[UIView alloc] initWithFrame:footerFrame];
         
         UIButton * checkbox = [[UIButton alloc] initWithFrame:CGRectMake(10, 5, 30, 30)];
-        UIImage *checkedboxImg = [UIImage imageNamed:footerCheckedStatus ? @"checkbox.png": @"uncheckbox.png"];
+        UIImage *checkedboxImg = [UIImage imageNamed:footerCheckedStatus ? @"checkbox": @"uncheckbox"];
         [checkbox setBackgroundImage:checkedboxImg forState:UIControlStateNormal];
         [checkbox addTarget:self action:@selector(checkFooterView:) forControlEvents:UIControlEventTouchUpInside];
         checkbox.backgroundColor = [UIColor clearColor];
@@ -703,7 +786,7 @@ static NSString * cellID = @"CellIdentifier";
     
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:section];
+        sectionObj = [_searchArray objectAtIndex:section];
     }
     else
     {
@@ -727,7 +810,7 @@ static NSString * cellID = @"CellIdentifier";
 {
     if (self.allowSearch && self.isSearching)
     {
-        return self.searchArray.count;
+        return _searchArray.count;
     }
     return internalResultsArray.count;
 }
@@ -738,7 +821,7 @@ static NSString * cellID = @"CellIdentifier";
     
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:section];
+        sectionObj = [_searchArray objectAtIndex:section];
     }
     else
     {
@@ -791,7 +874,7 @@ static NSString * cellID = @"CellIdentifier";
     NSDictionary * sectionObj = nil;
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:indexPath.section];
+        sectionObj = [_searchArray objectAtIndex:indexPath.section];
     }
     else
     {
@@ -873,7 +956,7 @@ static NSString * cellID = @"CellIdentifier";
     NSDictionary * sectionObj = nil;
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:indexPath.section];
+        sectionObj = [_searchArray objectAtIndex:indexPath.section];
     }
     else
     {
@@ -921,7 +1004,7 @@ static NSString * cellID = @"CellIdentifier";
                     [rowsArray removeObject:rowWrapperObj];
                }
                //refresh search array and reload rows
-               self.searchArray = [self searchTextInTableRows:self.searchBar.text];
+               _searchArray = [self searchTextInTableRows:self.searchBar.text];
            }
            else
            {
@@ -999,7 +1082,7 @@ static NSString * cellID = @"CellIdentifier";
     NSDictionary * sectionObj = nil;
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:indexPath.section];
+        sectionObj = [_searchArray objectAtIndex:indexPath.section];
     }
     else
     {
@@ -1053,10 +1136,6 @@ static NSString * cellID = @"CellIdentifier";
     
         if (self.allowSelectionCheckImage)
         {
-            //checkbox image
-            if (self.accessoryImages.count < 2)
-                return;
-        
             image =  (wrapperObjSelected) ? [self.accessoryImages lastObject] : [self.accessoryImages firstObject];
         }
         else
@@ -1085,7 +1164,7 @@ static NSString * cellID = @"CellIdentifier";
         {
             NSString * valueToFormat = (NSString *)kvcObject;
             NSString * formattedValue = [NSString stringWithFormat:format, valueToFormat];
-            return formattedValue;
+            if (formattedValue.length > 0) return formattedValue;
         }
         return (NSString*)kvcObject;
     }
@@ -1095,9 +1174,9 @@ static NSString * cellID = @"CellIdentifier";
         NSString * format = [formatArray objectAtIndex:0];
         if (format)
         {
-            NSString * valueToFormat = (NSString *)kvcObject;
+            NSString * valueToFormat = [NSString stringWithFormat:@"%@", (NSNumber*)kvcObject];
             NSString * formattedValue = [NSString stringWithFormat:format, valueToFormat];
-            return formattedValue;
+            if (formattedValue.length > 0) return formattedValue;
         }
         return [NSString stringWithFormat:@"%@", kvcObject];
     }
@@ -1142,7 +1221,7 @@ static NSString * cellID = @"CellIdentifier";
     NSDictionary * sectionObj = nil;
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:section];
+        sectionObj = [_searchArray objectAtIndex:section];
     }
     else
     {
@@ -1175,7 +1254,7 @@ static NSString * cellID = @"CellIdentifier";
     
     BOOL bToCheck = ![self allCheckedInSection:section];
     
-    UIImage *checkedboxImg = [UIImage imageNamed:bToCheck ? @"checkbox.png": @"uncheckbox.png"];
+    UIImage *checkedboxImg = [UIImage imageNamed:bToCheck ? @"checkbox": @"uncheckbox"];
     [checkBox setBackgroundImage:checkedboxImg forState:UIControlStateNormal];
     
     [self selectAllCheckBoxInSection:section :bToCheck];
@@ -1187,7 +1266,7 @@ static NSString * cellID = @"CellIdentifier";
     NSDictionary * sectionObj = nil;
     if (self.allowSearch && self.isSearching)
     {
-        sectionObj = [self.searchArray objectAtIndex:section];
+        sectionObj = [_searchArray objectAtIndex:section];
     }
     else
     {
@@ -1223,7 +1302,7 @@ static NSString * cellID = @"CellIdentifier";
 {
     UIButton * checkBox = (UIButton*) sender;
     footerCheckedStatus = !footerCheckedStatus;
-    UIImage *checkedboxImg = [UIImage imageNamed:footerCheckedStatus ? @"checkbox.png": @"uncheckbox.png"];
+    UIImage *checkedboxImg = [UIImage imageNamed:footerCheckedStatus ? @"checkbox": @"uncheckbox"];
     [checkBox setBackgroundImage:checkedboxImg forState:UIControlStateNormal];
 }
 

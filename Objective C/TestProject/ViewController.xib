@@ -42,15 +42,23 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJN-Wr-EfI">
-                    <rect key="frame" x="0.0" y="442" width="375" height="21.5"/>
+                    <rect key="frame" x="0.0" y="516" width="375" height="21.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFx-xm-L4z">
+                    <rect key="frame" x="0.0" y="428" width="375" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Load Strings with Delete"/>
+                    <connections>
+                        <action selector="loadStringsWithDelete:" destination="-1" eventType="touchUpInside" id="jSj-yD-bru"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="MJN-Wr-EfI" firstAttribute="top" secondItem="egG-wZ-OMo" secondAttribute="bottom" constant="60" id="9Wp-8d-CJg"/>
+                <constraint firstItem="MJN-Wr-EfI" firstAttribute="top" secondItem="egG-wZ-OMo" secondAttribute="bottom" constant="134" id="9Wp-8d-CJg"/>
                 <constraint firstItem="MJN-Wr-EfI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Box-HA-eyj"/>
                 <constraint firstAttribute="trailing" secondItem="egG-wZ-OMo" secondAttribute="trailing" id="Dpg-Vw-mK4"/>
                 <constraint firstItem="auC-Vv-DhJ" firstAttribute="top" secondItem="tPm-nA-bho" secondAttribute="bottom" constant="90" id="Ivs-o8-LWu"/>

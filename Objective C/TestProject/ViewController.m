@@ -28,25 +28,13 @@
 
 - (IBAction)loadNumbers:(id)sender
 {
-    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithNibName:@"TableSearchViewController" bundle:[NSBundle mainBundle]];
-    
     NSArray * firstSectionArray = @[@(1), @(2), @(3)];
     NSArray * secondSectionArray = @[@(2), @(5), @(6)];
     
-    tableSearchViewController.resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
+    NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
     
-    tableSearchViewController.tableViewStyle = UITableViewStyleGrouped;
-    tableSearchViewController.allowSearch = YES;
-    tableSearchViewController.selectionDoneButtonTitle = @"Select";
-    tableSearchViewController.dismissButtonTitle = @"Cancel";
-    
-    tableSearchViewController.accessoryAction = ACCESSORY_ACTION_CHECK;
-    tableSearchViewController.allowSelectionCheckImage = YES;
-    tableSearchViewController.allowSelectAllCheckBox = YES;
-    tableSearchViewController.checkBoxText = @"This is extra footer checkbox.";
-    
-    tableSearchViewController.cellColorStyle = CELL_COLOR_STYLE_ALTERNATE_DOUBLE;
-    
+    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:NO andAccessoryAction:ACCESSORY_ACTION_CHECK andFooterText:@"This is extra footer checkbox" andResultsArray:resultsArray];
+
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
         NSLog(@"%@", selectedKVCObjects);
@@ -59,8 +47,6 @@
 
 - (IBAction)loadObjects:(id)sender
 {
-    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithNibName:@"TableSearchViewController" bundle:[NSBundle mainBundle]];
-    
     CustomObject * firstObj = [[CustomObject alloc] initWithString:@"First" andNumber:@(1)];
     CustomObject * secondObj = [[CustomObject alloc] initWithString:@"Second" andNumber:@(2)];
     CustomObject * thirdObj = [[CustomObject alloc] initWithString:@"Third" andNumber:@(3)];
@@ -72,26 +58,16 @@
     NSArray * firstSectionArray = @[firstObj, secondObj, thirdObj];
     NSArray * secondSectionArray = @[forthObj, fifthObj, firstObj];
     
-    tableSearchViewController.resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
+    NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
     
-    tableSearchViewController.tableViewStyle = UITableViewStyleGrouped;
-    tableSearchViewController.allowSearch = YES;
+    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_CHECK andFooterText:@"This is extra footer checkbox" andResultsArray:resultsArray];
     
-    
+    //Must define below properties for seachability
     tableSearchViewController.searchKeys = @[@"stringProperty"];
     tableSearchViewController.textLabelKeys = @[@"stringProperty"];
     tableSearchViewController.subTitleKeys = @[@"numberProperty"];
     tableSearchViewController.textLableFormats = @[@"%@"];
     tableSearchViewController.subTitleFormats = @[@"%@"];
-    
-    tableSearchViewController.selectionDoneButtonTitle = @"Select";
-    tableSearchViewController.dismissButtonTitle = @"Cancel";
-    
-    tableSearchViewController.accessoryAction = ACCESSORY_ACTION_CHECK;
-    tableSearchViewController.allowSelectionCheckImage = YES;
-    tableSearchViewController.allowSelectAllCheckBox = YES;
-    
-    tableSearchViewController.cellColorStyle = CELL_COLOR_STYLE_ALTERNATE_DOUBLE;
     
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
@@ -105,25 +81,12 @@
 
 - (IBAction)loadStrings:(id)sender
 {
-    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithNibName:@"TableSearchViewController" bundle:[NSBundle mainBundle]];
-
-    
     NSArray * firstSectionArray = @[@"one", @"two", @"three"];
     NSArray * secondSectionArray = @[@"one", @"three", @"five",  @"six",];
     
-    tableSearchViewController.resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
+    NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
     
-    tableSearchViewController.tableViewStyle = UITableViewStyleGrouped;
-    tableSearchViewController.allowSearch = YES;
-    tableSearchViewController.selectionDoneButtonTitle = @"Select";
-    tableSearchViewController.dismissButtonTitle = @"Cancel";
-    
-    tableSearchViewController.accessoryAction = ACCESSORY_ACTION_CHECK;
-    tableSearchViewController.allowSelectionCheckImage = YES;
-    tableSearchViewController.allowSelectAllCheckBox = YES;
-    tableSearchViewController.checkBoxText = @"This is extra footer checkbox.";
-    
-    tableSearchViewController.cellColorStyle = CELL_COLOR_STYLE_ALTERNATE_DOUBLE;
+    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_CHECK andFooterText:@"" andResultsArray:resultsArray];
     
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
@@ -134,5 +97,25 @@
     UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
     [self presentViewController:navCtrl animated:YES completion:nil];
 }
+
+- (IBAction)loadStringsWithDelete:(id)sender
+{
+    NSArray * firstSectionArray = @[@"one", @"two", @"three"];
+    NSArray * secondSectionArray = @[@"one", @"three", @"five",  @"six",];
+    
+    NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
+    
+    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_DELETE andFooterText:@"" andResultsArray:resultsArray];
+    
+    tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
+    {
+        NSLog(@"%@", selectedKVCObjects);
+        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+    };
+    
+    UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
+    [self presentViewController:navCtrl animated:YES completion:nil];
+}
+
 
 @end

@@ -8,26 +8,26 @@
 
 #import <UIKit/UIKit.h>
 
-enum ACCESSORY_ACTION
+typedef enum ACCESSORY_ACTION
 {
     ACCESSORY_ACTION_CHECK=1,
     ACCESSORY_ACTION_DELETE,
     ACCESSORY_ACTION_NAVIGATE
-};
+} ACCESSORY_ACTION;
 
-typedef enum cellColorStyle
+typedef enum CELLCOLORSTYLE
 {
     CELL_COLOR_STYLE_NONE=0,
     CELL_COLOR_STYLE_UNIFORM,
     CELL_COLOR_STYLE_ALTERNATE_DOUBLE,
     CELL_COLOR_STYLE_ALTERNATE_TRIPLE
-} cellColorStyle;
+} CELLCOLORSTYLE;
 
-typedef enum sectionColorStyle
+typedef enum SECTIONCOLORSTYLE
 {
     SECTION_COLOR_STYLE_NONE=0,
     SECTION_COLOR_STYLE_UNIFORM=1
-} sectionColorStyle;
+} SECTIONCOLORSTYLE;
 
 @protocol TableSearchViewControllerDelegate <NSObject>
 
@@ -49,9 +49,9 @@ typedef enum sectionColorStyle
 
 @property (nonatomic, assign, nullable) id <TableSearchViewControllerDelegate> delegate;
 
-@property (nonatomic, retain) NSArray * _Nullable  searchArray;
+-(instancetype) initWithCellColorStyle:(CELLCOLORSTYLE)cellColorStyle andSectionColorStyle:(SECTIONCOLORSTYLE) sectionColorStyle andAllowSelectionCheckMark:(BOOL)bAllowSelectionCheckMark andAllowSelectAllCheckBox:(BOOL)bAllowSelectAllCheckBox andAllowSearch:(BOOL)bAllowSearch andAccessoryAction:(ACCESSORY_ACTION)accessoryAction andFooterText:(NSString*)footerText andResultsArray:(NSArray*)resultsArray;
 
-@property (nonatomic, retain) NSArray * _Nonnull resultsArray;
+@property (nonatomic, retain) NSArray<NSDictionary<NSString *, NSArray<NSObject*>*> *> *  _Nonnull resultsArray;
 
 @property (nonatomic, retain) NSArray * _Nullable cellColorArray;
 @property (nonatomic, retain) NSArray * _Nullable cellTextColorArray;
@@ -59,9 +59,8 @@ typedef enum sectionColorStyle
 @property (nonatomic, retain) NSArray * _Nullable sectionColorArray;
 @property (nonatomic, assign) UIColor * _Nullable seperatorColor;
 
-@property (nonatomic) sectionColorStyle sectionColorStyle;
-@property (nonatomic) cellColorStyle cellColorStyle;
-@property (nonatomic) UITableViewStyle tableViewStyle;
+@property (nonatomic) SECTIONCOLORSTYLE sectionColorStyle;
+@property (nonatomic) CELLCOLORSTYLE cellColorStyle ;
 
 @property (nonatomic, retain) NSString * _Nonnull textLabelSeperator;
 @property (nonatomic, retain) NSString * _Nonnull subTitleSeperator;
@@ -98,7 +97,7 @@ typedef enum sectionColorStyle
 @property (nonatomic, retain) NSString * _Nullable accessoryPromptMessageText;
 @property (nonatomic, retain) NSString * _Nullable accessoryPromptOKButtonTitle;
 @property (nonatomic, retain) NSString * _Nullable accessoryPromptCancelButtonTitle;
-@property (nonatomic) NSUInteger accessoryAction;
+@property (nonatomic) ACCESSORY_ACTION accessoryAction;
 
 @property (nonatomic) BOOL isSearching;
 @property (strong, nonatomic) UISearchBar * _Nullable searchBar;
