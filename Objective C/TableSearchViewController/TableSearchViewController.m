@@ -106,7 +106,6 @@ static NSString * cellID = @"CellIdentifier";
 
 -(void)commonInitDefaults
 {
-
     self.selectionDoneButtonTitle = @"Select";
     self.dismissButtonTitle = @"Cancel";
     
@@ -905,7 +904,6 @@ static NSString * cellID = @"CellIdentifier";
     else
     {
         cell.textLabel.text = title;
-        NSString * subTitle = [self getFormattedStringFromDisplayKeys:kvcObject :self.subTitleKeys :self.subTitleFormats :self.subTitleSeperator];
         cell.detailTextLabel.text = subTitle;
     }
     
@@ -1174,7 +1172,7 @@ static NSString * cellID = @"CellIdentifier";
         NSString * format = [formatArray objectAtIndex:0];
         if (format)
         {
-            NSString * valueToFormat = [NSString stringWithFormat:@"%@", (NSNumber*)kvcObject];
+            double valueToFormat = [((NSNumber*)kvcObject) doubleValue];
             NSString * formattedValue = [NSString stringWithFormat:format, valueToFormat];
             if (formattedValue.length > 0) return formattedValue;
         }
@@ -1187,11 +1185,21 @@ static NSString * cellID = @"CellIdentifier";
     {
         NSString * key = [displayKeyArray objectAtIndex:idx];
         NSString * format = [formatArray objectAtIndex:idx];
-        NSString * valueToAppend = [self getValueFromKVCObject:kvcObject :key];
+        id value = [self getValueFromKVCObject:kvcObject :key];
         
-        if (format)
+        NSString * valueToAppend = nil;
+        
+        if (format && value)
         {
-            valueToAppend = [NSString stringWithFormat:format, valueToAppend];
+            if ([value isKindOfClass:[NSNumber class]])
+            {
+                double d = [((NSNumber*)value) doubleValue];
+                valueToAppend = [NSString stringWithFormat:format, d];
+            }
+            else
+            {
+                valueToAppend = [NSString stringWithFormat:format, value];
+            }
         }
         
         [retString appendString:valueToAppend];
@@ -1202,7 +1210,7 @@ static NSString * cellID = @"CellIdentifier";
     return retString;
 }
 
-- (NSString *)getValueFromKVCObject : (id) kvcObject :(NSString*) key
+- (id)getValueFromKVCObject : (id) kvcObject :(NSString*) key
 {
     if ([kvcObject respondsToSelector:@selector(objectForKey:)])
     {
