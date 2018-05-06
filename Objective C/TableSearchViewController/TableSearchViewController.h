@@ -80,6 +80,8 @@ typedef enum SECTIONCOLORSTYLE
 @property (nonatomic, retain) NSArray * _Nullable accessoryImages;
 @property (nonatomic, retain) NSArray * _Nullable selectAllImages;
 
+@property (nonatomic) BOOL preventSubTitle;
+
 @property (nonatomic) BOOL allowSelectAllCheckBox;
 @property (nonatomic) BOOL allowSelectionCheckMark;
 @property (nonatomic) BOOL allowSelectionCheckImage;

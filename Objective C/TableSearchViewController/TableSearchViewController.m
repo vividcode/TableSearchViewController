@@ -887,7 +887,8 @@ static NSString * cellID = @"CellIdentifier";
     id kvcObject = wrapperObj.kvcObject;
     
     NSString * title = [self getFormattedStringFromDisplayKeys:kvcObject :self.textLabelKeys :self.textLableFormats :self.textLabelSeperator];
-    NSString * subTitle = [self getFormattedStringFromDisplayKeys:kvcObject :self.subTitleKeys :self.subTitleFormats :self.subTitleSeperator];
+    NSString * subTitle = (self.preventSubTitle == NO) ?
+    [self getFormattedStringFromDisplayKeys:kvcObject :self.subTitleKeys :self.subTitleFormats :self.subTitleSeperator] : @"";
     
     cell.textLabel.numberOfLines = 0;
     if (self.showGroupedView)
@@ -904,7 +905,11 @@ static NSString * cellID = @"CellIdentifier";
     else
     {
         cell.textLabel.text = title;
-        cell.detailTextLabel.text = subTitle;
+        
+        if (!self.preventSubTitle)
+        {
+            cell.detailTextLabel.text = subTitle;
+        }
     }
     
     cell.backgroundColor = [self.cellColorArray objectAtIndex:(indexPath.row%(self.cellColorStyle))];

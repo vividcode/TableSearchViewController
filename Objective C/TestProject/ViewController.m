@@ -36,7 +36,7 @@
     TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:NO andAccessoryAction:ACCESSORY_ACTION_CHECK andFooterText:@"This is extra footer checkbox" andResultsArray:resultsArray];
     
     tableSearchViewController.textLableFormats = @[@"My numbers: %.4f"];
-    tableSearchViewController.subTitleFormats = @[@"My numbers: %.4f"];
+    tableSearchViewController.preventSubTitle = YES;
     
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
