@@ -38,7 +38,7 @@
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
         NSLog(@"%@", selectedKVCObjects);
-        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+        _valueLabel.text = [NSString stringWithFormat:@"Selected: %@", [selectedKVCObjects componentsJoinedByString:@","]];
     };
     
     UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
@@ -72,7 +72,7 @@
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
         NSLog(@"%@", selectedKVCObjects);
-        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+        _valueLabel.text = [NSString stringWithFormat:@"Selected: %@", [selectedKVCObjects componentsJoinedByString:@","]];
     };
     
     UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
@@ -91,7 +91,7 @@
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {
         NSLog(@"%@", selectedKVCObjects);
-        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+        _valueLabel.text = [NSString stringWithFormat:@"Selected: %@", [selectedKVCObjects componentsJoinedByString:@","]];
     };
     
     UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
@@ -111,6 +111,12 @@
     {
         NSLog(@"%@", selectedKVCObjects);
         _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+    };
+    
+    tableSearchViewController.accessoryActionDoneBlock = ^(NSArray* _Nullable  accessoryActionKVCObjects)
+    {
+        NSLog(@"%@", accessoryActionKVCObjects);
+        _valueLabel.text = [NSString stringWithFormat:@"Deleted: %@", [accessoryActionKVCObjects componentsJoinedByString:@","]];
     };
     
     UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];

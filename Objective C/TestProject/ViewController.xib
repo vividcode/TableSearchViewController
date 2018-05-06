@@ -20,57 +20,47 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auC-Vv-DhJ">
-                    <rect key="frame" x="0.0" y="232" width="375" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auC-Vv-DhJ">
+                    <rect key="frame" x="0.0" y="58" width="375" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Load Numbers"/>
                     <connections>
                         <action selector="loadNumbers:" destination="-1" eventType="touchUpInside" id="Ou2-Sh-4md"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="egG-wZ-OMo">
-                    <rect key="frame" x="0.0" y="352" width="375" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="egG-wZ-OMo">
+                    <rect key="frame" x="0.0" y="96" width="375" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Load Objects"/>
                     <connections>
                         <action selector="loadObjects:" destination="-1" eventType="touchUpInside" id="mdq-lh-axB"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tPm-nA-bho">
-                    <rect key="frame" x="0.0" y="112" width="375" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tPm-nA-bho">
+                    <rect key="frame" x="0.0" y="20" width="375" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Load Strings"/>
                     <connections>
                         <action selector="loadStrings:" destination="-1" eventType="touchUpInside" id="E1Q-S4-djH"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJN-Wr-EfI">
-                    <rect key="frame" x="0.0" y="516" width="375" height="21.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFx-xm-L4z">
-                    <rect key="frame" x="0.0" y="428" width="375" height="30"/>
+                    <rect key="frame" x="0.0" y="134" width="375" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Load Strings with Delete"/>
                     <connections>
                         <action selector="loadStringsWithDelete:" destination="-1" eventType="touchUpInside" id="jSj-yD-bru"/>
                     </connections>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Selected: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJN-Wr-EfI">
+                    <rect key="frame" x="0.0" y="323" width="375" height="21.5"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <color key="textColor" red="0.0" green="0.43119087899709413" blue="0.62812914459336877" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-            <constraints>
-                <constraint firstItem="MJN-Wr-EfI" firstAttribute="top" secondItem="egG-wZ-OMo" secondAttribute="bottom" constant="134" id="9Wp-8d-CJg"/>
-                <constraint firstItem="MJN-Wr-EfI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Box-HA-eyj"/>
-                <constraint firstAttribute="trailing" secondItem="egG-wZ-OMo" secondAttribute="trailing" id="Dpg-Vw-mK4"/>
-                <constraint firstItem="auC-Vv-DhJ" firstAttribute="top" secondItem="tPm-nA-bho" secondAttribute="bottom" constant="90" id="Ivs-o8-LWu"/>
-                <constraint firstItem="egG-wZ-OMo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="KNI-5v-MoW"/>
-                <constraint firstItem="auC-Vv-DhJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ROE-fF-4rX"/>
-                <constraint firstItem="tPm-nA-bho" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="112" id="Th4-xK-gQy"/>
-                <constraint firstItem="egG-wZ-OMo" firstAttribute="top" secondItem="auC-Vv-DhJ" secondAttribute="bottom" constant="90" id="foA-pn-BCD"/>
-                <constraint firstAttribute="trailing" secondItem="MJN-Wr-EfI" secondAttribute="trailing" id="gAg-73-LXc"/>
-                <constraint firstAttribute="trailing" secondItem="tPm-nA-bho" secondAttribute="trailing" id="oQG-rc-uda"/>
-                <constraint firstItem="tPm-nA-bho" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="s3G-cp-BgH"/>
-                <constraint firstAttribute="trailing" secondItem="auC-Vv-DhJ" secondAttribute="trailing" id="vNp-f6-Eiw"/>
-            </constraints>
             <variation key="default">
                 <mask key="subviews">
                     <exclude reference="auC-Vv-DhJ"/>
