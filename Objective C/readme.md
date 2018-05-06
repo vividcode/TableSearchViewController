@@ -44,12 +44,13 @@ When you run the above code, a viewcontroller pops up (presented) and allows you
 
 Upon pressing Select, TableSearchViewController gets dismissed, and tableSearchViewController.selectionDoneBlock block executes, and selected objects (NSString) are supplied inside the block as part of NSArray.
 
-Note that resultsArray dictinaries can also accept any NSObject derived objects, in which case you must supply specific property name to display in table rows. 
-This property name must be supplied in the property textLabelKeys which is an array of properties to display inside UITableViewCell textLabel.
-Similarly, subTitleKeys array property holds properties to display inside UITableViewCell textLabel.
-Display formats can be supplied using textLableFormats and subTitleFormats Arrays.
-Searchable properties can be supplied using searchKeys Array property.
-If array of NSDictionary is supplied as part of NSArray, all the above property values must correspond to dictionary keys.
+Note that resultsArray dictinaries can also accept any NSObject derived objects, in which case you must supply specific property name to display in table rows.
+
+- This property name must be supplied in the property textLabelKeys which is an array of properties to display inside UITableViewCell textLabel.
+- Similarly, subTitleKeys array property holds properties to display inside UITableViewCell textLabel.
+- Display formats can be supplied using textLableFormats and subTitleFormats Arrays.
+- Searchable properties can be supplied using searchKeys Array property.
+- If array of NSDictionary is supplied as part of NSArray, all the above property values must correspond to dictionary keys.
 
 For elaborate example of how various objects can be displayed inside TableSearchViewController, see example project. 
 
