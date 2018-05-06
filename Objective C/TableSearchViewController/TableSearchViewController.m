@@ -1151,6 +1151,9 @@ static NSString * cellID = @"CellIdentifier";
     
     rowArray = [[sectionObj allValues] firstObject];
     
+    if ((rowArray == nil) || (rowArray.count == 0))
+        return false;
+    
     NSPredicate * predicate = [NSPredicate predicateWithFormat:@"selected==%d", YES];
     
     BOOL bAllChecked = [rowArray filteredArrayUsingPredicate:predicate].count == rowArray.count;
