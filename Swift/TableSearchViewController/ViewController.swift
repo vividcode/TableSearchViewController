@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var resultLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,10 +19,16 @@ class ViewController: UIViewController {
 
     @IBAction func loadStrings(_ sender: Any)
     {
-        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+        let resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
+
+        let tableVC = TableSearchViewController.init(cellColorStyle: CellColorStyle.CELL_COLOR_STYLE_UNIFORM, sectionColorStyle: SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: false, allowSelectAllImage: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, footerText: "This is extra footer", resultsArray: resultsArray)
         
-        tableVC.resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
-        tableVC.allowSearch = true
+        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+            
+            let str = "Selected: " + selectedObjects.description
+            self.resultLabel.text? = str
+            print("Selected:\(str)")
+        }
         
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
@@ -32,10 +39,17 @@ class ViewController: UIViewController {
     
     @IBAction func loadNumbers(_ sender: Any)
     {
-        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+        let resultsArray = [["First": [1,2,3]], ["Second": [2,5,6,7]]]
         
-        tableVC.resultsArray = [["First": [1,2,3]], ["Second": [2,5,6,7]]]
-        tableVC.allowSearch = true
+        let tableVC = TableSearchViewController.init(cellColorStyle: CellColorStyle.CELL_COLOR_STYLE_UNIFORM, sectionColorStyle: SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: false, allowSelectAllImage: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, footerText: "This is extra footer", resultsArray: resultsArray)
+        
+        
+        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+            
+            let str = "Selected: " + selectedObjects.description
+            self.resultLabel.text? = str
+            print("Selected:\(str)")
+        }
         
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
@@ -46,8 +60,6 @@ class ViewController: UIViewController {
     
     @IBAction func loadDictionaries (_ sender: Any)
     {
-        let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
-       
         let dict1 = ["text": "Mytext1", "num" : 1] as [String : Any]
         let dict2 = ["text": "Mytext2", "num" : 2] as [String : Any]
         let dict3 = ["text": "Mytext3", "num" : 3] as [String : Any]
@@ -55,10 +67,20 @@ class ViewController: UIViewController {
         let dict5 = ["text": "Mytext6", "num" : 5] as [String : Any]
         let dict6 = ["text": "Mytext7", "num" : 6] as [String : Any]
 
+        
+        let resultsArray = [["First": [dict1, dict2, dict3]], ["Second": [dict3, dict4, dict5, dict6]]]
+        
+        let tableVC = TableSearchViewController.init(cellColorStyle: CellColorStyle.CELL_COLOR_STYLE_UNIFORM, sectionColorStyle: SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: false, allowSelectAllImage: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, footerText: "This is extra footer", resultsArray: resultsArray)
+        
+        
         tableVC.textLabelKeys = ["text"]
         tableVC.subTitleKeys = ["num"]
-
-        tableVC.resultsArray = [["First": [dict1, dict2, dict3]], ["Second": [dict3, dict4, dict5, dict6]]]
+        
+        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+            let str = "Selected: " + selectedObjects.description
+            self.resultLabel.text? = str
+            print("Selected:\(str)")
+        }
 
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
 
