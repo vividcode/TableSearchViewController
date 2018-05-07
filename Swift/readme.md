@@ -26,13 +26,19 @@ All of the above can be accomplished in just few lines of code, like below:
 
 To create UITableView with above objects with possible search through rows also, use the following code:
 
-     let tableVC = UIViewController.getViewControllerWithName(vcName: "TableSearchViewController") as! TableSearchViewController
+        let resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
+
+        let tableVC = TableSearchViewController.init(cellColorStyle: CellColorStyle.CELL_COLOR_STYLE_UNIFORM, sectionColorStyle: SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: false, allowSelectAllImage: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, footerText: "This is extra footer", resultsArray: resultsArray)
         
-     tableVC.resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
-     tableVC.allowSearch = true
+        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+            
+            let str = "Selected: " + selectedObjects.description
+            self.resultLabel.text? = str
+            print("Selected:\(str)")
+        }
         
-     let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
-     self.navigationController?.present(tableNavVC, animated: true, completion: {
+        self.navigationController?.present(tableNavVC, animated: true, completion: {
             print("presented")
-     })
+        })
