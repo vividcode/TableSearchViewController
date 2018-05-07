@@ -5,6 +5,6 @@ http://www.iphonegamezone.net/select-search-delete-uitableview-powerful-viewcont
 
 Individual readme.md can be found at:
 
-https://github.com/vividcode/TableSearchViewController/Objective C/readme.md
+https://github.com/vividcode/TableSearchViewController/blob/master/Objective%20C/readme.md
 
-https://github.com/vividcode/TableSearchViewController/Swift/readme.md
+https://github.com/vividcode/TableSearchViewController/blob/master/Swift/readme.md
