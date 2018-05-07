@@ -520,9 +520,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         if (kvcObject is String)
         {
-            let format = formatArray.first
-            if (!(format?.isEmpty)!)
+            if ((formatArray ?? []).isEmpty == false)
             {
+                let format = formatArray.first
                 let valueToFormat = kvcObject as! String
                 let formattedValue = String(format:(format)!, valueToFormat)
                 return formattedValue
@@ -533,9 +533,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         if (kvcObject is NSNumber)
         {
-            let format = formatArray.first
-            if (!(format?.isEmpty)!)
+            if ((formatArray ?? []).isEmpty == false)
             {
+                let format = formatArray.first
                 let valueToFormat = kvcObject as! String
                 let formattedValue = String(format:format!, valueToFormat)
                 return formattedValue
