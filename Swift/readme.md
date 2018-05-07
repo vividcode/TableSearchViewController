@@ -1,8 +1,13 @@
+**Caveat:**
+Swift TableSearchViewController is freshly under porting effort and many APIs do not work same as Objective C counterpart. This is constantly under updates and should be fully functional very soon.
+
+**TableSearchViewController:**
+
 TableSearchViewController is a powerful UIViewController with easy to initialize interface. 
 
 All you have to do is:
 
-- Supply your rows inside a special NSArray of NSDictionaries with <Section Name (String) : Rows Array (NSObjects NSArray)>
+- Supply your rows inside a special NSArray of NSDictionaries with <Section Name (String) : Rows Array (String/NSNumbers/NSDictionaries NSArray)>
 - Supply cell and section formatting style
 - Supply selection button criteria (in addition to select / delete flag)
 - Supply Search flag
