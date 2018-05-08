@@ -63,9 +63,9 @@ class ViewController: UIViewController {
         let dict1 = ["text": "Totaldrunk", "num" : 1] as [String : AnyObject]
         let dict2 = ["text": "Lovelystrings", "num" : 2] as [String : AnyObject]
         let dict3 = ["text": "Flyingsaucer", "num" : 3] as [String : AnyObject]
-        let dict4 = ["text": "Lovelyapple", "num" : 4] as [String : AnyObject]
+        let dict4 = ["text": "lovelyapple", "num" : 4] as [String : AnyObject]
         let dict5 = ["text": "Flyingberries", "num" : 5] as [String : AnyObject]
-        let dict6 = ["text": "Kiterunner", "num" : 6] as [String : AnyObject]
+        let dict6 = ["text": "kiterunner", "num" : 6] as [String : AnyObject]
 
         
         let resultsArray = [["First": [dict1, dict2, dict3]], ["Second": [dict3, dict4, dict5, dict6]]]

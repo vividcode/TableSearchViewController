@@ -382,7 +382,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                     
                     for searchKey in self.searchKeys!
                     {
-                        if (kvcDict![searchKey] as! String).contains(searchText)
+                        let kvcValue = kvcDict![searchKey] as! String
+                    
+                        if (kvcValue.lowercased().contains(searchText.lowercased()))
                         {
                             bContainsKey = true
                             break
