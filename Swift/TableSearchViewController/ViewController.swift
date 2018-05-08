@@ -60,19 +60,19 @@ class ViewController: UIViewController {
     
     @IBAction func loadDictionaries (_ sender: Any)
     {
-        let dict1 = ["text": "Mytext1", "num" : 1] as [String : Any]
-        let dict2 = ["text": "Mytext2", "num" : 2] as [String : Any]
-        let dict3 = ["text": "Mytext3", "num" : 3] as [String : Any]
-        let dict4 = ["text": "Mytext4", "num" : 4] as [String : Any]
-        let dict5 = ["text": "Mytext6", "num" : 5] as [String : Any]
-        let dict6 = ["text": "Mytext7", "num" : 6] as [String : Any]
+        let dict1 = ["text": "Totaldrunk", "num" : 1] as [String : AnyObject]
+        let dict2 = ["text": "Lovelystrings", "num" : 2] as [String : AnyObject]
+        let dict3 = ["text": "Flyingsaucer", "num" : 3] as [String : AnyObject]
+        let dict4 = ["text": "Lovelyapple", "num" : 4] as [String : AnyObject]
+        let dict5 = ["text": "Flyingberries", "num" : 5] as [String : AnyObject]
+        let dict6 = ["text": "Kiterunner", "num" : 6] as [String : AnyObject]
 
         
         let resultsArray = [["First": [dict1, dict2, dict3]], ["Second": [dict3, dict4, dict5, dict6]]]
         
         let tableVC = TableSearchViewController.init(cellColorStyle: CellColorStyle.CELL_COLOR_STYLE_UNIFORM, sectionColorStyle: SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: false, allowSelectAllImage: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, footerText: "This is extra footer", resultsArray: resultsArray)
         
-        
+        tableVC.searchKeys = ["text"]
         tableVC.textLabelKeys = ["text"]
         tableVC.subTitleKeys = ["num"]
         

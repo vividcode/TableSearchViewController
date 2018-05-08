@@ -19,6 +19,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     var searchBar : UISearchBar?
     var searchBarPlaceHolderText : String?
     
+    var searchKeys : Array<String>?
+    
     var textLabelFormats : Array<String>?
     var textLabelKeys : Array<String>?
     {
@@ -369,9 +371,26 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                     ((kvcNumber?.doubleValue)! <= endRange.doubleValue))
                 }
             }
-            else
+            else if (kvcObject is Dictionary<String, Any>)
             {
-                continue
+                filteredRowsArray = sectionRows?.filter
+                {
+                    let wrapperObjectSample = $0 as? WrapperObj
+                    let kvcDict = wrapperObjectSample?.kvcObject as? Dictionary<String, Any>
+                    
+                    var bContainsKey = false
+                    
+                    for searchKey in self.searchKeys!
+                    {
+                        if (kvcDict![searchKey] as! String).contains(searchText)
+                        {
+                            bContainsKey = true
+                            break
+                        }
+                    }
+                    
+                    return bContainsKey
+                }
             }
 
             searchResultArray.append([sectionTitle!:filteredRowsArray!])
