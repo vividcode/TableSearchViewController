@@ -59,7 +59,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     private var searchArray : Array<Dictionary<String, Array<WrapperObj>>>?
     
     private var isSearching : Bool?
-    private var selectedObjects : Array<Any>?
+    private var selectedObjects : Array<AnyObject>?
     
     var allowSearch : Bool?
     
@@ -129,7 +129,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                 var rowsArray = Array<Any>.init()
                 for obj in sectionRows!
                 {
-                    let wrapperObj = WrapperObj.init(selected: false, kvcObject: obj)
+                    let wrapperObj = WrapperObj.init(selected: false, kvcObj: obj as AnyObject)
                     rowsArray.append(wrapperObj)
                 }
                 
@@ -141,21 +141,26 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
 
     var allowSelectionCheckMark : Bool?
     {
-        didSet(newVal)
+        didSet(oldAllowSelectionCheckMark)
         {
-            self.allowSelectionImages = !newVal!
+            self.allowSelectionImages = !self.allowSelectionCheckMark!
         }
     }
     
     var allowSelectionImages : Bool?
     {
-        didSet(newVal)
+        willSet(newAllowSelectionImages)
         {
-            self.allowSelectionCheckMark = !newVal!
-            
-            if (newVal == true)
+            if (newAllowSelectionImages == true)
             {
-                self.accessoryImageNames = ["checkbox", "uncheckbox"]
+                if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
+                {
+                    self.accessoryImageNames = ["checkbox", "uncheckbox"]
+                }
+                else
+                {
+                    self.accessoryImageNames = ["delete"]
+                }
             }
             else
             {
@@ -166,13 +171,13 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var accessoryImageNames : Array<String>?
     {
-        didSet(newVal)
+        willSet(newAccessoryImageNames)
         {
-            if (newVal != nil)
+            if (newAccessoryImageNames != nil)
             {
                 var temp = Array<UIImage>.init()
                 
-                for s in newVal!
+                for s in newAccessoryImageNames!
                 {
                     temp.append(UIImage.init(named: s)!)
                 }
@@ -226,7 +231,11 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         self.subTitleSeparator = ""
 
         self.accessoryAction = accessoryAction
-        self.allowSelectionImages = !allowSelectionCheckMark
+        
+        // Defered
+        defer {
+           self.allowSelectionCheckMark = allowSelectionCheckMark
+        }
         
         self.selectedObjects = []
         self.extraFlagSelected = false
@@ -234,8 +243,6 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         self.screenTitle = ""
         self.selectionDoneButtonTitle = "Select"
         self.dismissButtonTitle = "Cancel"
- 
-        self.allowSelectionCheckMark = allowSelectionCheckMark
         
         self.delegate = nil
 
@@ -498,10 +505,114 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         cell?.backgroundColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
         cell?.textLabel?.textColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
         cell?.detailTextLabel?.textColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
+        
+        self.createAccessoryView(cell: cell!, wrapperObjSelected: wrapperObj.selected)
 
         return cell!
     }
     
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
+    {
+        var sectionObj : Dictionary<String, Array<WrapperObj>>
+        
+        var topLevelArrayToIndex = (self.allowSearch! && self.isSearching!) ? self.searchArray : self.internalResultsArray
+        
+       
+        
+        if (self.allowSearch! && self.isSearching!)
+        {
+            sectionObj = self.searchArray![indexPath.section]
+        }
+        else
+        {
+            sectionObj = self.internalResultsArray![indexPath.section]
+        }
+        
+        var arrayToIndex = sectionObj.values.first
+        var wrapperObj = arrayToIndex![indexPath.row]
+        let kvcObject = wrapperObj.kvcObject
+        
+        if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
+        {
+            //1 - Update model - selected array
+            let bToCheck = !wrapperObj.selected;
+            wrapperObj.selected = bToCheck;
+            
+            if let idx = selectedObjects?.index(where: {
+                  ($0 === kvcObject)
+            })
+            {
+                if (bToCheck == false)
+                {
+                    selectedObjects?.remove(at: idx)
+                }
+            }
+            else
+            {
+                if (bToCheck == true)
+                {
+                    selectedObjects?.append(kvcObject)
+                }
+            }
+            
+            //2 - Update UI - Cell accessory button image
+            let cell = self.tableView.cellForRow(at: indexPath)
+            
+            if (self.allowSelectionCheckMark! == true)
+            {
+                cell?.accessoryType = (bToCheck == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+            }
+            else
+            {
+                let image = (bToCheck == true) ? self.accessoryImages![0] : self.accessoryImages![1]
+                let button = cell!.accessoryView as! UIButton
+                button.setBackgroundImage(image, for: UIControlState.normal)
+            }
+           
+            //3 - Reload Table Data from data source, and update bar buttons
+       //     self.tableView.reloadData()
+            //[self updateBarButtonStatus];
+        }
+    }
+    
+    //MARK: Accessory View
+    func createAccessoryView (cell : UITableViewCell, wrapperObjSelected : Bool)
+    {
+        if (self.allowSelectionCheckMark! == true)
+        {
+            cell.accessoryType = (wrapperObjSelected == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        }
+        else
+        {
+            let image = (wrapperObjSelected == true) ? self.accessoryImages![0] : self.accessoryImages![1]
+            if (cell.accessoryView == nil)
+            {
+                let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: CHECKBOX_WIDTH, height: CHECKBOX_HEIGHT))
+                button.setBackgroundImage(image, for: UIControlState.normal)
+                button.addTarget(self,  action: #selector(self.accessoryTapped(sender:event:)), for: UIControlEvents.touchUpInside)
+                cell.accessoryView = button
+            }
+            else
+            {
+                let button = cell.accessoryView as! UIButton
+                button.setBackgroundImage(image, for: UIControlState.normal)
+            }
+        }
+    }
+    
+    @objc func accessoryTapped (sender:UIButton, event : UIEvent)
+    {
+        let touch = event.allTouches?.first
+        let touchPoint = touch?.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: touchPoint!)
+        
+        if (indexPath != nil)
+        {
+            self.tableView.delegate?.tableView!(self.tableView, accessoryButtonTappedForRowWith: indexPath!)
+        }
+    }
+    
+    //MARK: Helpers
     func isTitleDisplayedOnPreviousRow (rowsArray : Array<Any>, index : Int, title : String) -> Bool
     {
         var idx = index

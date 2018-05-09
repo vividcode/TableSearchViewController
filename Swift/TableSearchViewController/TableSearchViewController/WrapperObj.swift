@@ -8,8 +8,14 @@
 
 import Foundation
 
-struct WrapperObj
+class WrapperObj
 {
     var selected : Bool
-    var kvcObject : Any
+    var kvcObject : AnyObject
+    
+    init(selected : Bool, kvcObj : AnyObject) {
+        self.selected = selected
+        self.kvcObject = kvcObj
+        
+    }
 }
