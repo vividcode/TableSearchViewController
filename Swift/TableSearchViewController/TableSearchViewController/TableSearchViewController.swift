@@ -511,13 +511,58 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         return cell!
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //1 - Update Model, and decide about check / uncheck
+        let bToCheck = self.updateModelForSelection(indexPath: indexPath)
+        
+        //2 - Update UI - Cell accessory button image
+        let cell = self.tableView.cellForRow(at: indexPath)
+        
+        if (self.allowSelectionCheckMark! == true)
+        {
+            cell?.accessoryType = (bToCheck == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        }
+        else
+        {
+            let image = (bToCheck == true) ? self.accessoryImages![0] : self.accessoryImages![1]
+            let button = cell!.accessoryView as! UIButton
+            button.setBackgroundImage(image, for: UIControlState.normal)
+        }
+        
+        //3 - Reload Table Data from data source, and update bar buttons
+        self.tableView.reloadData()
+        //[self updateBarButtonStatus];
+    }
+    
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
+    {
+        //1 - Update Model, and decide about check / uncheck
+       let bToCheck = self.updateModelForSelection(indexPath: indexPath)
+    
+       //2 - Update UI - Cell accessory button image
+       let cell = self.tableView.cellForRow(at: indexPath)
+
+        if (self.allowSelectionCheckMark! == true)
+        {
+            cell?.accessoryType = (bToCheck == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        }
+        else
+        {
+            let image = (bToCheck == true) ? self.accessoryImages![0] : self.accessoryImages![1]
+            let button = cell!.accessoryView as! UIButton
+            button.setBackgroundImage(image, for: UIControlState.normal)
+        }
+
+        //3 - Reload Table Data from data source, and update bar buttons
+        //self.tableView.reloadData()
+        //[self updateBarButtonStatus];
+    }
+    
+    func updateModelForSelection (indexPath: IndexPath) -> Bool
     {
         var sectionObj : Dictionary<String, Array<WrapperObj>>
         
         var topLevelArrayToIndex = (self.allowSearch! && self.isSearching!) ? self.searchArray : self.internalResultsArray
-        
-       
         
         if (self.allowSearch! && self.isSearching!)
         {
@@ -532,14 +577,15 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         var wrapperObj = arrayToIndex![indexPath.row]
         let kvcObject = wrapperObj.kvcObject
         
+        var bToCheck = false
         if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
         {
             //1 - Update model - selected array
-            let bToCheck = !wrapperObj.selected;
+            bToCheck = !wrapperObj.selected;
             wrapperObj.selected = bToCheck;
             
             if let idx = selectedObjects?.index(where: {
-                  ($0 === kvcObject)
+                ($0 === kvcObject)
             })
             {
                 if (bToCheck == false)
@@ -554,25 +600,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                     selectedObjects?.append(kvcObject)
                 }
             }
-            
-            //2 - Update UI - Cell accessory button image
-            let cell = self.tableView.cellForRow(at: indexPath)
-            
-            if (self.allowSelectionCheckMark! == true)
-            {
-                cell?.accessoryType = (bToCheck == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
-            }
-            else
-            {
-                let image = (bToCheck == true) ? self.accessoryImages![0] : self.accessoryImages![1]
-                let button = cell!.accessoryView as! UIButton
-                button.setBackgroundImage(image, for: UIControlState.normal)
-            }
-           
-            //3 - Reload Table Data from data source, and update bar buttons
-       //     self.tableView.reloadData()
-            //[self updateBarButtonStatus];
         }
+        
+        return bToCheck
     }
     
     //MARK: Accessory View
