@@ -993,18 +993,14 @@ static NSString * cellID = @"CellIdentifier";
                
                NSMutableArray * rowsArray = [[sectionObjInMainResults allValues] firstObject];
                
-               NSUInteger rowIndexInMainResults = [rowsArray indexOfObject:wrapperObj];
-               
-               WrapperObject* rowWrapperObj = [rowsArray objectAtIndex:rowIndexInMainResults];
-               
                id kvcObject = wrapperObj.kvcObject;
                
                [selectedResultsArray removeObject:kvcObject];
                [accessoryActionResultsArray addObject:kvcObject];
            
-               if ([rowsArray indexOfObject:rowWrapperObj] != NSNotFound)
+               if ([rowsArray indexOfObject:wrapperObj] != NSNotFound)
                {
-                    [rowsArray removeObject:rowWrapperObj];
+                    [rowsArray removeObject:wrapperObj];
                }
                //refresh search array and reload rows
                _searchArray = [self searchTextInTableRows:self.searchBar.text];

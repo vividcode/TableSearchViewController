@@ -103,7 +103,7 @@
 
 - (IBAction)loadStringsWithDelete:(id)sender
 {
-    NSArray * firstSectionArray = @[@"one", @"two", @"three"];
+    NSArray * firstSectionArray = @[@"one", @"two", @"two", @"three"];
     NSArray * secondSectionArray = @[@"one", @"three", @"five",  @"six",];
     
     NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
