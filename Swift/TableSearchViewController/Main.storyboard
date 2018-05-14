@@ -18,49 +18,47 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJF-PZ-uaA">
-                                <rect key="frame" x="0.0" y="112" width="375" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJF-PZ-uaA">
+                                <rect key="frame" x="0.0" y="64" width="375" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Load Strings"/>
                                 <connections>
                                     <action selector="loadStrings:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="X11-jY-IIu"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECk-11-OBT">
-                                <rect key="frame" x="0.0" y="232" width="375" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECk-11-OBT">
+                                <rect key="frame" x="0.0" y="102" width="375" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Load Numbers"/>
                                 <connections>
                                     <action selector="loadNumbers:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="BDe-cR-Xa8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hyP-Pl-fft">
-                                <rect key="frame" x="0.0" y="352" width="375" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hyP-Pl-fft">
+                                <rect key="frame" x="0.0" y="140" width="375" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Load Dictionaries"/>
                                 <connections>
                                     <action selector="loadDictionaries:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="bY2-1R-Atp"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3L-aM-YG2">
-                                <rect key="frame" x="0.0" y="442" width="375" height="21.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3L-aM-YG2">
+                                <rect key="frame" x="0.0" y="580" width="375" height="21.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NLb-z1-2A2">
+                                <rect key="frame" x="0.0" y="177" width="375" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Load Strings With Delete"/>
+                                <connections>
+                                    <action selector="loadStringsWithDelete:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="DVd-Z8-Z2J"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="ECk-11-OBT" secondAttribute="trailing" id="2x9-YN-kOj"/>
-                            <constraint firstItem="B3L-aM-YG2" firstAttribute="top" secondItem="hyP-Pl-fft" secondAttribute="bottom" constant="60" id="5LB-Vp-v72"/>
-                            <constraint firstItem="B3L-aM-YG2" firstAttribute="leading" secondItem="wlN-EH-VyP" secondAttribute="leading" id="6Hf-m5-Ire"/>
-                            <constraint firstAttribute="trailing" secondItem="B3L-aM-YG2" secondAttribute="trailing" id="FfG-yH-A8A"/>
-                            <constraint firstItem="ECk-11-OBT" firstAttribute="top" secondItem="DJF-PZ-uaA" secondAttribute="bottom" constant="90" id="L4Z-LE-1zZ"/>
-                            <constraint firstItem="DJF-PZ-uaA" firstAttribute="top" secondItem="wlN-EH-VyP" secondAttribute="top" constant="112" id="Tus-re-T3y"/>
-                            <constraint firstAttribute="trailing" secondItem="DJF-PZ-uaA" secondAttribute="trailing" id="aJu-Dd-d9r"/>
-                            <constraint firstItem="hyP-Pl-fft" firstAttribute="leading" secondItem="wlN-EH-VyP" secondAttribute="leading" id="f7G-bM-jSY"/>
-                            <constraint firstItem="DJF-PZ-uaA" firstAttribute="leading" secondItem="wlN-EH-VyP" secondAttribute="leading" id="khQ-Jd-tgi"/>
-                            <constraint firstAttribute="trailing" secondItem="hyP-Pl-fft" secondAttribute="trailing" id="qYq-WM-dbw"/>
-                            <constraint firstItem="hyP-Pl-fft" firstAttribute="top" secondItem="ECk-11-OBT" secondAttribute="bottom" constant="90" id="rsu-uk-r0m"/>
-                            <constraint firstItem="ECk-11-OBT" firstAttribute="leading" secondItem="wlN-EH-VyP" secondAttribute="leading" id="x9a-9D-jJH"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="arc-FT-KOI"/>
                         <variation key="default">
                             <mask key="subviews">
