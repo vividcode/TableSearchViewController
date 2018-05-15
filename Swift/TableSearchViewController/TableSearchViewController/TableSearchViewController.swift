@@ -135,7 +135,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                     rowsArray.append(wrapperObj)
                 }
                 
-                let rowDict = [sectionTitle : rowsArray] as! Dictionary<String, Array<WrapperObj>>
+                var rowDict = [sectionTitle : rowsArray] as! Dictionary<String, Array<WrapperObj>>
                 internalResultsArray?.append(rowDict)
             }
         }
@@ -664,40 +664,61 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     //MARK: Helpers
     func updateModelForDeletion (indexPath: IndexPath)
     {
-        var sectionObj : Dictionary<String, Array<WrapperObj>>
-        
-        if (self.allowSearch! && self.isSearching!)
-        {
-            sectionObj = self.searchArray![indexPath.section]
-        }
-        else
-        {
-            sectionObj = self.internalResultsArray![indexPath.section]
-        }
-        
-        var arrayToIndex = sectionObj.values.first as! Array<WrapperObj>
-        
-        let wrapperObj = arrayToIndex[indexPath.row]
-     //   let wrapperObj = self.getWrapperObjectFromIndexPath(indexPath: indexPath)
-     //   var arrayToIndex = self.getArrayToIndexFroomIndexPath(indexPath: indexPath, bIgnoreSearchCondition: true)
+        let wrapperObj = self.getWrapperObjectFromIndexPath(indexPath: indexPath)
+        var rowArray = self.getArrayToIndexFroomIndexPath(indexPath: indexPath, bIgnoreSearchCondition: false)
         
         if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
         {
-            if let idx = arrayToIndex.index(where: {
+            if let idx = rowArray.index(where: {
                 ($0 === wrapperObj)
             })
             {
                 let kvcObject = wrapperObj.kvcObject
                 self.accessoryActionResultsArray?.append(kvcObject)
-                let element = arrayToIndex.remove(at: idx)
-                let key = sectionObj.keys.first
-                sectionObj[key!] = arrayToIndex
-                self.internalResultsArray![indexPath.section] = sectionObj
-            }
-            
-            if (self.allowSearch! && self.isSearching!)
-            {
-                self.searchArray = self.searchTextInTableRows(searchText: (self.searchBar?.text)!)
+   
+                if (self.allowSearch! && self.isSearching!)
+                {
+                    var searchSectionObj = self.searchArray![indexPath.section]
+                    var key = searchSectionObj.keys.first
+                    rowArray.remove(at: idx)
+                    searchSectionObj[key!] = rowArray
+                    self.searchArray![indexPath.section] = searchSectionObj
+                    
+                    var internalSectionDict : Dictionary<String, Array<WrapperObj>> = ["" : []]
+                    
+                    if let sectionIdx = self.internalResultsArray?.index(where: {
+                        
+                        (eachSectionObj) -> Bool in
+                        
+                        var bRetVal = false
+
+                        if let rowIdx = (eachSectionObj.values.first?.index(where: {
+                            (wrapperObj === $0)
+                        }))
+                        {
+                            var internalRowArray = eachSectionObj.values.first
+                            key = eachSectionObj.keys.first
+                            internalRowArray?.remove(at: rowIdx)
+                            
+                            internalSectionDict = eachSectionObj
+                            internalSectionDict[key!] = internalRowArray
+                            
+                            bRetVal = true
+                        }
+                        return bRetVal
+                    })
+                    {
+                        self.internalResultsArray![sectionIdx] = internalSectionDict
+                    }
+                }
+                else
+                {
+                    var sectionObj = self.internalResultsArray![indexPath.section]
+                    let key = sectionObj.keys.first
+                    rowArray.remove(at: idx)
+                    sectionObj[key!] = rowArray
+                    self.internalResultsArray![indexPath.section] = sectionObj
+                }
             }
         }
     }
