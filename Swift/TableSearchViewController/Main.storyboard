@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="YhI-eC-fPY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="YhI-eC-fPY">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,52 +13,91 @@
         <scene sceneID="8rg-VP-P89">
             <objects>
                 <viewController storyboardIdentifier="ViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9DN-PF-3Gv" customClass="ViewController" customModule="TableSearchViewController" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WgE-Nn-g2D"/>
+                        <viewControllerLayoutGuide type="bottom" id="Fr0-af-ufB"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="wlN-EH-VyP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJF-PZ-uaA">
-                                <rect key="frame" x="0.0" y="64" width="375" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJF-PZ-uaA">
+                                <rect key="frame" x="0.0" y="60" width="375" height="30"/>
                                 <state key="normal" title="Load Strings"/>
                                 <connections>
                                     <action selector="loadStrings:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="X11-jY-IIu"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECk-11-OBT">
-                                <rect key="frame" x="0.0" y="102" width="375" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECk-11-OBT">
+                                <rect key="frame" x="0.0" y="100" width="375" height="30"/>
                                 <state key="normal" title="Load Numbers"/>
                                 <connections>
                                     <action selector="loadNumbers:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="BDe-cR-Xa8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hyP-Pl-fft">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hyP-Pl-fft">
                                 <rect key="frame" x="0.0" y="140" width="375" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Load Dictionaries"/>
                                 <connections>
                                     <action selector="loadDictionaries:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="bY2-1R-Atp"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3L-aM-YG2">
-                                <rect key="frame" x="0.0" y="580" width="375" height="21.5"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NLb-z1-2A2">
-                                <rect key="frame" x="0.0" y="177" width="375" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NLb-z1-2A2">
+                                <rect key="frame" x="0.0" y="180" width="375" height="30"/>
                                 <state key="normal" title="Load Strings With Delete"/>
                                 <connections>
                                     <action selector="loadStringsWithDelete:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="DVd-Z8-Z2J"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AIh-KE-1A1">
+                                <rect key="frame" x="0.0" y="220" width="375" height="30"/>
+                                <state key="normal" title="Load Numbers With Delete"/>
+                                <connections>
+                                    <action selector="loadNumbersWithDelete:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="oyJ-pv-A9A"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3L-aM-YG2">
+                                <rect key="frame" x="0.0" y="572" width="375" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="os3-3e-wG2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tfU-jn-rBh">
+                                <rect key="frame" x="0.0" y="260" width="375" height="30"/>
+                                <state key="normal" title="Load Dictionaries With Delete"/>
+                                <connections>
+                                    <action selector="loadDictionariesWithDelete:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="x7d-Ch-OOR"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <viewLayoutGuide key="safeArea" id="arc-FT-KOI"/>
+                        <constraints>
+                            <constraint firstItem="ECk-11-OBT" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="2uF-9T-SDJ"/>
+                            <constraint firstItem="NLb-z1-2A2" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="9VV-sx-tNd"/>
+                            <constraint firstItem="NLb-z1-2A2" firstAttribute="top" secondItem="hyP-Pl-fft" secondAttribute="bottom" constant="10" id="Awa-4S-5eI"/>
+                            <constraint firstItem="Fr0-af-ufB" firstAttribute="top" secondItem="B3L-aM-YG2" secondAttribute="bottom" constant="50" id="BQo-D3-ArW"/>
+                            <constraint firstItem="tfU-jn-rBh" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="BsA-lF-6Zm"/>
+                            <constraint firstItem="DJF-PZ-uaA" firstAttribute="top" secondItem="WgE-Nn-g2D" secondAttribute="bottom" constant="40" id="E4t-AJ-81A"/>
+                            <constraint firstItem="hyP-Pl-fft" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="GjB-Pa-c0t"/>
+                            <constraint firstItem="DJF-PZ-uaA" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="Hy6-LE-7r4"/>
+                            <constraint firstItem="tfU-jn-rBh" firstAttribute="top" secondItem="AIh-KE-1A1" secondAttribute="bottom" constant="10" id="Mek-zx-WOu"/>
+                            <constraint firstItem="B3L-aM-YG2" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="QiV-px-KBh"/>
+                            <constraint firstItem="AIh-KE-1A1" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="ZMW-Et-3gb"/>
+                            <constraint firstItem="tfU-jn-rBh" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="awG-MS-hAw"/>
+                            <constraint firstItem="ECk-11-OBT" firstAttribute="top" secondItem="DJF-PZ-uaA" secondAttribute="bottom" constant="10" id="bcZ-hU-WZl"/>
+                            <constraint firstItem="hyP-Pl-fft" firstAttribute="top" secondItem="ECk-11-OBT" secondAttribute="bottom" constant="10" id="cbW-xW-h4a"/>
+                            <constraint firstItem="hyP-Pl-fft" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="edB-Qm-2HC"/>
+                            <constraint firstItem="AIh-KE-1A1" firstAttribute="top" secondItem="NLb-z1-2A2" secondAttribute="bottom" constant="10" id="gyQ-e2-PIR"/>
+                            <constraint firstItem="ECk-11-OBT" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="htX-9x-JFw"/>
+                            <constraint firstItem="NLb-z1-2A2" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="iSt-kb-dux"/>
+                            <constraint firstItem="DJF-PZ-uaA" firstAttribute="centerX" secondItem="wlN-EH-VyP" secondAttribute="centerX" id="k24-Zv-wzh"/>
+                            <constraint firstItem="AIh-KE-1A1" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="ozG-9v-1fT"/>
+                            <constraint firstItem="B3L-aM-YG2" firstAttribute="width" secondItem="wlN-EH-VyP" secondAttribute="width" id="ydw-Hv-Qp1"/>
+                            <constraint firstItem="AIh-KE-1A1" firstAttribute="top" secondItem="NLb-z1-2A2" secondAttribute="bottom" constant="10" id="zUp-Qp-IfM"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="ECk-11-OBT"/>

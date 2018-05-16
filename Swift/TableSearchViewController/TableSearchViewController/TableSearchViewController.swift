@@ -10,6 +10,7 @@ import UIKit
 
 typealias SelectionDoneClosure = (Array<Any>, Bool) -> Void
 typealias DismissClosure = (String) -> Void
+typealias DeletionDoneClosure = (Any) -> Void
 
 class TableSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
 {
@@ -50,6 +51,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     var extraFlagSelected : Bool?
     
     var selectionDoneBlock: SelectionDoneClosure?
+    var deletionDoneBlock : DeletionDoneClosure?
+    
     var dismissBlock : DismissClosure?
 
     var screenTitle : String?
@@ -199,13 +202,16 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         willSet(newVal)
         {
+            self.selectedObjects = []
             if (newVal == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
             {
-                self.selectedObjects = []
+                self.selectionDoneButtonTitle = "Select"
                 self.accessoryImageNames = ["checkbox", "uncheckbox"]
             }
             else if (newVal == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
             {
+                self.selectionDoneButtonTitle = "Done"
+                
                 self.accessoryActionResultsArray = []
                 self.accessoryImageNames = ["delete"]
                 
@@ -299,8 +305,19 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     @objc func doneTapped(sender : AnyObject)
     {
+        var arrayToReturn : Array<Any>
+        
+        if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
+        {
+            arrayToReturn = self.selectedObjects!
+        }
+        else
+        {
+            arrayToReturn = self.accessoryActionResultsArray!
+        }
+        
         self.navigationController?.dismiss(animated: true, completion: {
-            self.selectionDoneBlock?(self.selectedObjects!, self.extraFlagSelected!)
+            self.selectionDoneBlock?(arrayToReturn, self.extraFlagSelected!)
         })
     }
     
@@ -571,8 +588,11 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             alertController.message = String.init(format: self.accessoryPromptMessage!, displayValueToDelete)
         
             let okAction = UIAlertAction.init(title: self.accessoryPromptOKButtonTitle!, style: UIAlertActionStyle.default) { (action) in
-                self.updateModelForDeletion(indexPath: indexPath)
+                
+                let kvcObjectDeleted = self.updateModelForDeletion(indexPath: indexPath)
                 self.tableView.reloadData()
+                
+                self.deletionDoneBlock?(kvcObjectDeleted)
             }
         
             let cancelAction = UIAlertAction.init(title: self.accessoryPromptCancelButtonTitle!, style: UIAlertActionStyle.cancel) { (action) in
@@ -613,39 +633,40 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     //MARK: Accessory View
     func createAccessoryView (cell : UITableViewCell, wrapperObjSelected : Bool)
     {
-        if (self.allowSelectionCheckMark! == true)
+        var image : UIImage
+        
+        if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
         {
-            cell.accessoryType = (wrapperObjSelected == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
-        }
-        else
-        {
-            var image : UIImage
-            
-            if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
+            if (self.allowSelectionCheckMark! == true)
+            {
+                cell.accessoryType = (wrapperObjSelected == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+                return
+            }
+            else
             {
                 image = (wrapperObjSelected == true) ? self.accessoryImages![0] : self.accessoryImages![1]
             }
-            else if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
-            {
-                image = self.accessoryImages![0]
-            }
-            else
-            {
-                image = UIImage.init()
-            }
-            
-            if (cell.accessoryView == nil)
-            {
-                let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: CHECKBOX_WIDTH, height: CHECKBOX_HEIGHT))
-                button.setBackgroundImage(image, for: UIControlState.normal)
-                button.addTarget(self,  action: #selector(self.accessoryTapped(sender:event:)), for: UIControlEvents.touchUpInside)
-                cell.accessoryView = button
-            }
-            else
-            {
-                let button = cell.accessoryView as! UIButton
-                button.setBackgroundImage(image, for: UIControlState.normal)
-            }
+        }
+        else if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
+        {
+            image = self.accessoryImages![0]
+        }
+        else
+        {
+            image = UIImage.init()
+        }
+        
+        if (cell.accessoryView == nil)
+        {
+            let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: CHECKBOX_WIDTH, height: CHECKBOX_HEIGHT))
+            button.setBackgroundImage(image, for: UIControlState.normal)
+            button.addTarget(self,  action: #selector(self.accessoryTapped(sender:event:)), for: UIControlEvents.touchUpInside)
+            cell.accessoryView = button
+        }
+        else
+        {
+            let button = cell.accessoryView as! UIButton
+            button.setBackgroundImage(image, for: UIControlState.normal)
         }
     }
     
@@ -662,8 +683,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     //MARK: Helpers
-    func updateModelForDeletion (indexPath: IndexPath)
+    func updateModelForDeletion (indexPath: IndexPath) -> Any
     {
+        var kvcObjectDeleted : AnyObject!
         let wrapperObj = self.getWrapperObjectFromIndexPath(indexPath: indexPath)
         var rowArray = self.getArrayToIndexFroomIndexPath(indexPath: indexPath, bIgnoreSearchCondition: false)
         
@@ -698,7 +720,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                         {
                             var internalRowArray = eachSectionObj.values.first
                             key = eachSectionObj.keys.first
-                            internalRowArray?.remove(at: rowIdx)
+                            kvcObjectDeleted = (internalRowArray?.remove(at: rowIdx).kvcObject)!
                             
                             internalSectionDict = eachSectionObj
                             internalSectionDict[key!] = internalRowArray
@@ -715,12 +737,14 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                 {
                     var sectionObj = self.internalResultsArray![indexPath.section]
                     let key = sectionObj.keys.first
-                    rowArray.remove(at: idx)
+                    kvcObjectDeleted = rowArray.remove(at: idx).kvcObject
                     sectionObj[key!] = rowArray
                     self.internalResultsArray![indexPath.section] = sectionObj
                 }
             }
         }
+        
+        return kvcObjectDeleted as Any
     }
     
     func updateModelForSelection (indexPath: IndexPath) -> Bool
