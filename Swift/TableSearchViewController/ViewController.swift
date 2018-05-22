@@ -34,7 +34,6 @@ class ViewController: UIViewController {
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
     }
     
@@ -57,7 +56,6 @@ class ViewController: UIViewController {
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
     }
     
@@ -101,7 +99,6 @@ class ViewController: UIViewController {
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
 
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
     }
     
@@ -128,7 +125,6 @@ class ViewController: UIViewController {
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
     }
    
@@ -156,7 +152,6 @@ class ViewController: UIViewController {
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
     }
     
@@ -216,7 +211,6 @@ class ViewController: UIViewController {
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
     }
     override func didReceiveMemoryWarning()

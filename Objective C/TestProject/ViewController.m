@@ -57,20 +57,19 @@
     CustomObject * forthObj = [[CustomObject alloc] initWithString:@"Four" andNumber:@(4.111)];
     CustomObject * fifthObj = [[CustomObject alloc] initWithString:@"Five" andNumber:@(5.345)];
     
-    
     NSArray * firstSectionArray = @[firstObj, secondObj, thirdObj];
     NSArray * secondSectionArray = @[forthObj, fifthObj, firstObj];
     
     NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
     
-    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_CHECK andFooterText:@"This is extra footer checkbox" andResultsArray:resultsArray];
+    TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_CHECK andFooterText:@"" andResultsArray:resultsArray];
     
     //Must define below properties for seachability
     tableSearchViewController.searchKeys = @[@"stringProperty"];
     tableSearchViewController.textLabelKeys = @[@"stringProperty"];
     tableSearchViewController.subTitleKeys = @[@"numberProperty"];
-    tableSearchViewController.textLableFormats = @[@"stringproperty: %@"];
-    tableSearchViewController.subTitleFormats = @[@"numberProperty: %.4f"];
+    tableSearchViewController.textLableFormats = @[@"String Property is: %@"];
+    tableSearchViewController.subTitleFormats = @[@"Number Property is: %.4f"];
     
     tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
     {

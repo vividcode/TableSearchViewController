@@ -454,6 +454,11 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     // MARK: Table View
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let sectionObj = self.internalResultsArray![section]
+        return sectionObj.keys.first
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         if (self.allowSearch! && self.isSearching!)
         {
