@@ -50,6 +50,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     var showGroupedView : Bool?
     var extraFlagSelected : Bool?
     
+    var sectionHeaderHeight : CGFloat?
+    
     var selectionDoneBlock: SelectionDoneClosure?
     var deletionDoneBlock : DeletionDoneClosure?
     
@@ -67,6 +69,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     private var accessoryActionResultsArray : Array<AnyObject>?
     
     var allowSearch : Bool?
+    var allowSelectAll : Bool?
     
     // MARK: Computed Properties
     var cellColorStyle : CellColorStyle?
@@ -128,7 +131,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             
             for (sectionDict) in newResultsArray!
             {
-                let sectionTitle = sectionDict.keys.first as! String
+                let sectionTitle = sectionDict.keys.first
                 let sectionRows = sectionDict.values.first
                 
                 var rowsArray = Array<Any>.init()
@@ -138,7 +141,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                     rowsArray.append(wrapperObj)
                 }
                 
-                var rowDict = [sectionTitle : rowsArray] as! Dictionary<String, Array<WrapperObj>>
+                let rowDict = [(sectionTitle as! String) : rowsArray] as! Dictionary<String, Array<WrapperObj>>
                 internalResultsArray?.append(rowDict)
             }
         }
@@ -161,6 +164,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                 if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
                 {
                     self.accessoryImageNames = ["checkbox", "uncheckbox"]
+                    self.allowSelectAll = true
                 }
                 else
                 {
@@ -242,7 +246,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(cellColorStyle : CellColorStyle, sectionColorStyle:SectionColorStyle, allowSelectionCheckMark: Bool, allowSelectAllImage : Bool, allowSearch: Bool, accessoryAction:ACCESSORY_ACTION, footerText: String, resultsArray : Array<Dictionary<String, Array<Any>>>)
+    convenience init(cellColorStyle : CellColorStyle, sectionColorStyle:SectionColorStyle, allowSelectionCheckMark: Bool,  allowSearch: Bool, accessoryAction:ACCESSORY_ACTION, footerText: String, resultsArray : Array<Dictionary<String, Array<Any>>>)
     {
         self.init(nibName: "TableSearchViewController", bundle: Bundle.main)
         
@@ -269,6 +273,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         self.screenTitle = ""
         self.selectionDoneButtonTitle = "Select"
         self.dismissButtonTitle = "Cancel"
+        self.sectionHeaderHeight = CGFloat(SECTION_HEADER_HEIGHT)
         
         self.delegate = nil
 
@@ -454,9 +459,60 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     // MARK: Table View
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionObj = self.internalResultsArray![section]
-        return sectionObj.keys.first
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return self.sectionHeaderHeight!
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
+        var sectionHeaderLabel : UILabel?
+        var sectionHeaderCheckbox : UIButton?
+        
+        let sectionObj = self.getSectionObjFromSection(section: section)
+        let sectionTitle = sectionObj.keys.first
+        
+        let bAllSelected = self.allCheckedWithSectionObj(sectionObj: sectionObj)
+        
+        let idx = (bAllSelected == true) ? 0 : 1
+        if let headerView = self.tableView.dequeueReusableHeaderFooterView(withIdentifier: headerID)
+        {
+            if ((self.allowSelectAll == true) && (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK))
+            {
+                let sectionHeaderCheckbox = headerView.viewWithTag(TAG_SECTION_HEADER_CHECKBOX) as! UIButton
+                sectionHeaderCheckbox.setBackgroundImage(self.accessoryImages?[idx], for: UIControlState.normal)
+            }
+            
+            let sectionHeaderLabel = headerView.viewWithTag(TAG_SECTION_TITLE_LABEL) as! UILabel
+            
+            sectionHeaderLabel.text = sectionTitle
+
+            return headerView
+        }
+        
+        let headerView = UITableViewHeaderFooterView.init(reuseIdentifier: headerID)
+        
+        let labelY = (self.sectionHeaderHeight! - CGFloat(SECTION_HEADER_LABEL_HEIGHT)) / 2
+        
+        sectionHeaderLabel = UILabel.init(frame: CGRect.init(x: 5, y: labelY, width: tableView.bounds.size.width - CGFloat(SECTION_HEADER_CHECKBOX_OFFSET), height: CGFloat(SECTION_HEADER_LABEL_HEIGHT)))
+        sectionHeaderLabel?.tag = TAG_SECTION_TITLE_LABEL
+        sectionHeaderLabel?.backgroundColor = UIColor.clear
+        sectionHeaderLabel?.textColor = UIColor.darkText
+        
+        sectionHeaderLabel?.text = sectionTitle
+        
+        headerView.contentView.addSubview(sectionHeaderLabel!)
+        
+        if ((self.allowSelectAll == true) && (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK))
+        {
+            sectionHeaderCheckbox = UIButton.init(frame: CGRect.init(x: tableView.bounds.size.width - CGFloat(SECTION_HEADER_CHECKBOX_OFFSET), y: 5, width: CGFloat(CHECKBOX_WIDTH), height: CGFloat(CHECKBOX_HEIGHT)))
+                sectionHeaderCheckbox?.tag = TAG_SECTION_HEADER_CHECKBOX
+            sectionHeaderCheckbox?.setBackgroundImage(self.accessoryImages?[idx], for: UIControlState.normal)
+            sectionHeaderCheckbox?.addTarget(self,  action: #selector(self.selectAllTapped(sender:event:)), for: UIControlEvents.touchUpInside)
+            
+            headerView.contentView.addSubview(sectionHeaderCheckbox!)
+        }
+       
+        return headerView
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -629,7 +685,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             }
         
             //3 - Reload Table Data from data source, and update bar buttons
-            //self.tableView.reloadData()
+            self.tableView.reloadData()
             //[self updateBarButtonStatus];
         }
     }
@@ -672,6 +728,47 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         {
             let button = cell.accessoryView as! UIButton
             button.setBackgroundImage(image, for: UIControlState.normal)
+        }
+    }
+    
+    @objc func selectAllTapped (sender:UIButton, event : UIEvent)
+    {
+        let touch = event.allTouches?.first
+        let touchPoint = touch?.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: touchPoint!)
+        
+        if (indexPath != nil)
+        {
+            let sectionObj = self.getSectionObjFromSection(section: (indexPath?.section)!)
+            
+            let bToCheck = !(self.allCheckedWithSectionObj(sectionObj: sectionObj))
+            
+            let rowsArray = sectionObj.values.first
+            
+            for wrapperObj in rowsArray!
+            {
+                wrapperObj.selected = bToCheck
+                let kvcObject = wrapperObj.kvcObject
+                
+                if let idx = selectedObjects?.index(where: {
+                    ($0 === kvcObject)
+                })
+                {
+                    if (bToCheck == false)
+                    {
+                        selectedObjects?.remove(at: idx)
+                    }
+                }
+                else
+                {
+                    if (bToCheck == true)
+                    {
+                        selectedObjects?.append(kvcObject)
+                    }
+                }
+            }
+            
+            self.tableView.reloadData()
         }
     }
     
@@ -810,7 +907,18 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         return arrayToIndex!
     }
     
-    func getWrapperObjectFromIndexPath (indexPath : IndexPath) -> WrapperObj
+    func allCheckedWithSectionObj (sectionObj : Dictionary<String, Array<WrapperObj>>) -> Bool
+    {
+        var arrayToIndex = sectionObj.values.first
+        
+       let notCheckedCount = arrayToIndex?.filter({ (wrapperObj) -> Bool in
+            return (wrapperObj.selected == false)
+        }).count
+        
+        return (notCheckedCount == 0)
+    }
+    
+    func getSectionObjFromSection (section : Int) -> Dictionary<String, Array<WrapperObj>>
     {
         var sectionObj : Dictionary<String, Array<WrapperObj>>
         
@@ -818,12 +926,19 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         if (self.allowSearch! && self.isSearching!)
         {
-            sectionObj = self.searchArray![indexPath.section]
+            sectionObj = self.searchArray![section]
         }
         else
         {
-            sectionObj = self.internalResultsArray![indexPath.section]
+            sectionObj = self.internalResultsArray![section]
         }
+        
+        return sectionObj
+    }
+    
+    func getWrapperObjectFromIndexPath (indexPath : IndexPath) -> WrapperObj
+    {
+        let sectionObj = self.getSectionObjFromSection(section: indexPath.section)
         
         var arrayToIndex = sectionObj.values.first
         var wrapperObj = arrayToIndex![indexPath.row]
