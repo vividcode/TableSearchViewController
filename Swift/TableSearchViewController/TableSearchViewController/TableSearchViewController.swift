@@ -288,7 +288,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         self.createSearchBar()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool)
+    {
+        self.updateBarButtonStatus()
         self.tableView.reloadData()
     }
     
@@ -308,6 +310,15 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
+    func updateBarButtonStatus()
+    {
+        if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
+        {
+            let selectionDoneButton = self.navigationItem.rightBarButtonItem
+            selectionDoneButton?.isEnabled = !((self.selectedObjects?.isEmpty)!)
+        }
+    }
+    
     @objc func doneTapped(sender : AnyObject)
     {
         var arrayToReturn : Array<Any>
@@ -316,12 +327,17 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         {
             arrayToReturn = self.selectedObjects!
         }
-        else
+        else if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
         {
             arrayToReturn = self.accessoryActionResultsArray!
         }
+        else
+        {
+            arrayToReturn = []
+        }
         
-        self.navigationController?.dismiss(animated: true, completion: {
+        self.navigationController?.dismiss(animated: true, completion:
+        {
             self.selectionDoneBlock?(arrayToReturn, self.extraFlagSelected!)
         })
     }
@@ -686,7 +702,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
             //3 - Reload Table Data from data source, and update bar buttons
             self.tableView.reloadData()
-            //[self updateBarButtonStatus];
+            self.updateBarButtonStatus()
         }
     }
 
@@ -769,6 +785,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             }
             
             self.tableView.reloadData()
+            self.updateBarButtonStatus()
         }
     }
     

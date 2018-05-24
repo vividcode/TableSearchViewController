@@ -109,10 +109,10 @@
     
     TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_DELETE andFooterText:@"" andResultsArray:resultsArray];
     
-    tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
+    tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  deletedKVCObjects, BOOL bExtraFlag)
     {
-        NSLog(@"%@", selectedKVCObjects);
-        _valueLabel.text = [NSString stringWithFormat:@"%@", [selectedKVCObjects componentsJoinedByString:@","]];
+        NSLog(@"%@", deletedKVCObjects);
+        _valueLabel.text = [NSString stringWithFormat:@"%@", [deletedKVCObjects componentsJoinedByString:@","]];
     };
     
     tableSearchViewController.accessoryActionDoneBlock = ^(NSArray* _Nullable  accessoryActionKVCObjects)

@@ -106,7 +106,15 @@ static NSString * cellID = @"CellIdentifier";
 
 -(void)commonInitDefaults
 {
-    self.selectionDoneButtonTitle = @"Select";
+    if (self.accessoryAction == ACCESSORY_ACTION_CHECK)
+    {
+        self.selectionDoneButtonTitle = @"Select";
+    }
+    else if (self.accessoryAction == ACCESSORY_ACTION_DELETE)
+    {
+        self.selectionDoneButtonTitle = @"Done";
+    }
+    
     self.dismissButtonTitle = @"Cancel";
     
     self.searchKeys = @[@"SELF"];
@@ -497,22 +505,40 @@ static NSString * cellID = @"CellIdentifier";
     if (!selectionDoneButton)
         return;
     
-    if (selectedResultsArray && selectedResultsArray.count > 0)
+    if (self.accessoryAction == ACCESSORY_ACTION_CHECK)
     {
-        selectionDoneButton.enabled = YES;
-    }
-    else
-    {
-        selectionDoneButton.enabled = NO;
+        if (selectedResultsArray && selectedResultsArray.count > 0)
+        {
+            selectionDoneButton.enabled = YES;
+        }
+        else
+        {
+            selectionDoneButton.enabled = NO;
+        }
     }
 }
 
 #pragma mark - Navbar Actions
 - (void) doneTapped
 {
+    NSArray * arrayToReturn = nil;
+    
+    if (self.accessoryAction == ACCESSORY_ACTION_CHECK)
+    {
+        arrayToReturn = selectedResultsArray;
+    }
+    else if (self.accessoryAction == ACCESSORY_ACTION_DELETE)
+    {
+        arrayToReturn = accessoryActionResultsArray;
+    }
+    else
+    {
+        arrayToReturn = [NSArray array];
+    }
+    
     if (self.selectionDoneBlock && selectedResultsArray)
     {
-        self.selectionDoneBlock(selectedResultsArray, footerCheckedStatus);
+        self.selectionDoneBlock(arrayToReturn, footerCheckedStatus);
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -1024,7 +1050,7 @@ static NSString * cellID = @"CellIdentifier";
            }
         }];
         
-        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:self.accessoryPromptCancelButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:self.accessoryPromptCancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
         {
         
         }];
