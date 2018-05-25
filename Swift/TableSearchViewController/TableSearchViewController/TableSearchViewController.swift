@@ -102,7 +102,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         {
             if (sectionColorStyle == SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM)
             {
-                self.sectionColorArray = [UIColor.init(named: UIColor.ColorName.OFFWHITE)]
+                self.sectionColorArray = [UIColor.init(named: UIColor.ColorName.LIGHTGRAY)]
             }
         }
     }
@@ -173,6 +173,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             }
             else
             {
+                self.allowSelectAll = true
                 self.accessoryImageNames = nil
             }
         }
@@ -266,6 +267,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         defer {
            self.accessoryAction = accessoryAction
            self.allowSelectionCheckMark = allowSelectionCheckMark
+            self.cellColorStyle = cellColorStyle
+            self.sectionColorStyle = sectionColorStyle
         }
         
         self.extraFlagSelected = false
@@ -276,9 +279,6 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         self.sectionHeaderHeight = CGFloat(SECTION_HEADER_HEIGHT)
         
         self.delegate = nil
-
-        self.cellColorStyle = cellColorStyle
-        self.sectionColorStyle = sectionColorStyle
     }
     
     // MARK view life cycle
@@ -513,6 +513,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         sectionHeaderLabel?.tag = TAG_SECTION_TITLE_LABEL
         sectionHeaderLabel?.backgroundColor = UIColor.clear
         sectionHeaderLabel?.textColor = UIColor.darkText
+        headerView.contentView.backgroundColor = self.sectionColorArray?.first
         
         sectionHeaderLabel?.text = sectionTitle
         
@@ -620,8 +621,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
         cell?.backgroundColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
-        cell?.textLabel?.textColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
-        cell?.detailTextLabel?.textColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
+        cell?.textLabel?.textColor = UIColor.darkText
+        cell?.detailTextLabel?.textColor = UIColor.darkText
         
         self.createAccessoryView(cell: cell!, wrapperObjSelected: wrapperObj.selected)
 
