@@ -731,7 +731,7 @@ static NSString * cellID = @"CellIdentifier";
         
         [checkBoxView addSubview:checkbox];
         
-        UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(40, 5, width - 35, 30)];
+        UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(45, 5, width - 50, 30)];
         label.text = self.checkBoxText;
         label.backgroundColor = [UIColor clearColor];
         
@@ -739,7 +739,7 @@ static NSString * cellID = @"CellIdentifier";
         
         checkBoxView.tintColor = [UIColor colorWithRed:0 green:0.48 blue:1 alpha:1];
         checkBoxView.backgroundColor = self.tableView.backgroundColor;
-        [self.view addSubview:checkBoxView];
+        self.tableView.tableFooterView = checkBoxView;
     }
 }
 
