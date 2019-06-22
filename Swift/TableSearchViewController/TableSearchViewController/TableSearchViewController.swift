@@ -8,47 +8,45 @@
 
 import UIKit
 
-typealias SelectionDoneClosure = (Array<Any>, Bool) -> Void
+typealias SelectionDoneClosure = (Array<Any>) -> Void
 typealias DismissClosure = (String) -> Void
 typealias DeletionDoneClosure = (Any) -> Void
 
 class TableSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
 {
     @IBOutlet weak var tableView: UITableView!
-    private var internalResultsArray : Array<Dictionary<String, Array<WrapperObj>>>?
+
     var delegate : TableSearchViewControllerDelegate?
     var searchBar : UISearchBar?
     var searchBarPlaceHolderText : String?
     
     var searchKeys : Array<String>?
     
-    var textLabelFormats : Array<String>?
-    var textLabelKeys : Array<String>?
+    var textLabelFormats : Array<String>
+    var textLabelKeys : Array<String>
     {
         didSet
         {
-            for _ in self.textLabelKeys!
+            for _ in self.textLabelKeys
             {
-                self.textLabelFormats?.append("%@")
+                self.textLabelFormats.append("%@")
             }
         }
     }
-    var subTitleFormats : Array<String>?
-  
-    var subTitleKeys : Array<String>?
+    var subTitleFormats : Array<String>
+    var subTitleKeys : Array<String>
     {
         didSet
         {
-            for _ in self.subTitleKeys!
+            for _ in self.subTitleKeys
             {
-                self.subTitleFormats?.append("")
+                self.subTitleFormats.append("")
             }
         }
     }
-    var textLabelSeparator : String?
-    var subTitleSeparator : String?
-    var showGroupedView : Bool?
-    var extraFlagSelected : Bool?
+    var textLabelSeparator : String = "-"
+    var subTitleSeparator : String = "_"
+    var showGroupedView : Bool
     
     var sectionHeaderHeight : CGFloat?
     
@@ -58,21 +56,22 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     var dismissBlock : DismissClosure?
 
     var screenTitle : String?
-    var selectionDoneButtonTitle : String?
-    var dismissButtonTitle : String?
+    var selectionDoneButtonTitle : String = "Select"
+    var dismissButtonTitle : String = "Cancel"
     
-    private var searchArray : Array<Dictionary<String, Array<WrapperObj>>>?
+    private var internalResultsArray : Array<Dictionary<String, Array<WrapperObj>>> = []
+    private var searchArray : Array<Dictionary<String, Array<WrapperObj>>> = []
     
-    private var isSearching : Bool?
-    private var selectedObjects : Array<AnyObject>?
+    private var isSearching : Bool
+    private var selectedObjects : Array<AnyObject> = []
     
-    private var accessoryActionResultsArray : Array<AnyObject>?
+    private var accessoryActionResultsArray : Array<AnyObject> = []
     
-    var allowSearch : Bool?
-    var allowSelectAll : Bool?
+    var allowSearch : Bool
+    var allowSelectAll : Bool
     
     // MARK: Computed Properties
-    var cellColorStyle : CellColorStyle?
+    var cellColorStyle : CellColorStyle = .CELL_COLOR_STYLE_UNIFORM
     {
         didSet
         {
@@ -109,12 +108,11 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     
     var sectionColorArray : Array<(UIColor)>?
     
-    
     var resultsArray : Array<Dictionary<String, Array<Any>>>?
     {
         get
         {
-            return self.resultsArray
+            return ((self.allowSearch && self.isSearching) ? searchArray : internalResultsArray)
         }
         
         set(newResultsArray)
@@ -122,11 +120,6 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             if (newResultsArray == nil)
             {
                 return
-            }
-            
-            if (internalResultsArray == nil)
-            {
-                internalResultsArray = Array<Dictionary<String, Array<WrapperObj>>>.init()
             }
             
             for (sectionDict) in newResultsArray!
@@ -141,21 +134,21 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                     rowsArray.append(wrapperObj)
                 }
                 
-                let rowDict = [(sectionTitle as! String) : rowsArray] as! Dictionary<String, Array<WrapperObj>>
-                internalResultsArray?.append(rowDict)
+                let rowDict = [sectionTitle : rowsArray] as! Dictionary<String, Array<WrapperObj>>
+                internalResultsArray.append(rowDict)
             }
         }
     }
 
-    var allowSelectionCheckMark : Bool?
+    var allowSelectionCheckMark : Bool = true
     {
         didSet(oldAllowSelectionCheckMark)
         {
-            self.allowSelectionImages = !self.allowSelectionCheckMark!
+            self.allowSelectionImages = !self.allowSelectionCheckMark
         }
     }
     
-    var allowSelectionImages : Bool?
+    var allowSelectionImages : Bool = false
     {
         willSet(newAllowSelectionImages)
         {
@@ -197,8 +190,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    var accessoryPromptTitle : String?
-    var accessoryPromptMessage : String?
+    private var accessoryPromptTitle : String = ""
+    
+    var accessoryPromptMessage : String = ""
     var accessoryPromptOKButtonTitle : String?
     var accessoryPromptCancelButtonTitle : String?
     
@@ -220,9 +214,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                 self.accessoryActionResultsArray = []
                 self.accessoryImageNames = ["delete"]
                 
-                if let title = Bundle.main.infoDictionary!["CFBundleDisplayName"]
+                if let title = Bundle.main.infoDictionary!["CFBundleDisplayName"] as? String
                 {
-                    self.accessoryPromptTitle = title as! String
+                    self.accessoryPromptTitle = title
                 }
                 else
                 {
@@ -240,14 +234,33 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     // MARK: Inits
     required init?(coder aDecoder: NSCoder)
     {
-       super.init(coder: aDecoder)
+        self.allowSearch = true
+        self.isSearching = false
+        self.allowSelectAll = true
+        self.showGroupedView = false
+        self.textLabelKeys = []
+        self.textLabelFormats = []
+        self.subTitleKeys = []
+        self.subTitleFormats = []
+        
+        super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+    {
+        self.allowSearch = true
+        self.isSearching = false
+        self.allowSelectAll = true
+        self.showGroupedView = false
+        self.textLabelKeys = []
+        self.textLabelFormats = []
+        self.subTitleKeys = []
+        self.subTitleFormats = []
+        
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(cellColorStyle : CellColorStyle, sectionColorStyle:SectionColorStyle, allowSelectionCheckMark: Bool,  allowSearch: Bool, accessoryAction:ACCESSORY_ACTION, footerText: String, resultsArray : Array<Dictionary<String, Array<Any>>>)
+    convenience init(cellColorStyle : CellColorStyle = .CELL_COLOR_STYLE_UNIFORM, sectionColorStyle:SectionColorStyle = .SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: Bool,  allowSearch: Bool, accessoryAction:ACCESSORY_ACTION,  resultsArray : Array<Dictionary<String, Array<Any>>>, showGroupedView:Bool = false)
     {
         self.init(nibName: "TableSearchViewController", bundle: Bundle.main)
         
@@ -255,13 +268,12 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.textLabelKeys = []
         self.textLabelFormats = []
-        self.textLabelSeparator = ""
+
         self.isSearching = false
         self.allowSearch = allowSearch
-        self.showGroupedView = false
+        self.showGroupedView = showGroupedView
         self.subTitleKeys = []
         self.subTitleFormats = []
-        self.subTitleSeparator = ""
         
         // Deferred
         defer {
@@ -270,8 +282,6 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             self.cellColorStyle = cellColorStyle
             self.sectionColorStyle = sectionColorStyle
         }
-        
-        self.extraFlagSelected = false
         
         self.screenTitle = ""
         self.selectionDoneButtonTitle = "Select"
@@ -297,13 +307,13 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     // MARK: NAV BAR
     func configureNavBar()
     {
-        if (!self.selectionDoneButtonTitle!.isEmpty)
+        if (!self.selectionDoneButtonTitle.isEmpty)
         {
             let doneButton = UIBarButtonItem.init(title: self.selectionDoneButtonTitle, style: UIBarButtonItemStyle.done, target: self, action: #selector(self.doneTapped))
             self.navigationItem.rightBarButtonItem = doneButton
         }
         
-        if (!self.dismissButtonTitle!.isEmpty)
+        if (!self.dismissButtonTitle.isEmpty)
         {
             let dismissButton = UIBarButtonItem.init(title: self.dismissButtonTitle, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancelTapped))
             self.navigationItem.leftBarButtonItem = dismissButton
@@ -315,7 +325,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
         {
             let selectionDoneButton = self.navigationItem.rightBarButtonItem
-            selectionDoneButton?.isEnabled = !((self.selectedObjects?.isEmpty)!)
+            selectionDoneButton?.isEnabled = !(self.selectedObjects.isEmpty)
         }
     }
     
@@ -325,11 +335,11 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
         {
-            arrayToReturn = self.selectedObjects!
+            arrayToReturn = self.selectedObjects
         }
         else if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
         {
-            arrayToReturn = self.accessoryActionResultsArray!
+            arrayToReturn = self.accessoryActionResultsArray
         }
         else
         {
@@ -338,7 +348,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.navigationController?.dismiss(animated: true, completion:
         {
-            self.selectionDoneBlock?(arrayToReturn, self.extraFlagSelected!)
+            self.selectionDoneBlock?(arrayToReturn)
         })
     }
     
@@ -357,7 +367,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     // MARK: Search Bar
     func createSearchBar()
     {
-        if (self.allowSearch!)
+        if (self.allowSearch)
         {
             self.searchBar = UISearchBar.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: NAVBAR_HEIGHT))
             self.searchBar?.delegate = self
@@ -388,7 +398,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         self.isSearching = !searchText.isEmpty
         
-        if (self.isSearching!)
+        if (self.isSearching)
         {
             self.searchArray = self.searchTextInTableRows(searchText: searchText)
         }
@@ -400,7 +410,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         var searchResultArray = Array<Dictionary<String, Array<WrapperObj>>>()
         
-        for sectionObj in self.internalResultsArray!
+        for sectionObj in self.internalResultsArray
         {
             let sectionTitle = sectionObj.keys.first
             let sectionRows = sectionObj.values.first
@@ -413,8 +423,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             {
                 filteredRowsArray = sectionRows?.filter
                 {
-                    let wrapperObjectSample = $0 as? WrapperObj
-                    let kvcString = wrapperObjectSample?.kvcObject as! String
+                    let wrapperObjectSample = $0
+                    let kvcString = wrapperObjectSample.kvcObject as! String
                     return kvcString.uppercased().contains(searchText.uppercased())
                 }
             }
@@ -428,8 +438,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
 
                 filteredRowsArray = sectionRows?.filter
                 {
-                    let wrapperObjectSample = $0 as? WrapperObj
-                    let kvcNumber = wrapperObjectSample?.kvcObject as? NSNumber
+                    let wrapperObjectSample = $0
+                    let kvcNumber = wrapperObjectSample.kvcObject as? NSNumber
                 
                     return (((kvcNumber?.doubleValue)! == searchTextNumber?.doubleValue) ||
                     ((kvcNumber?.doubleValue)! >= startRange.doubleValue) &&
@@ -440,8 +450,8 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             {
                 filteredRowsArray = sectionRows?.filter
                 {
-                    let wrapperObjectSample = $0 as? WrapperObj
-                    let kvcDict = wrapperObjectSample?.kvcObject as? Dictionary<String, Any>
+                    let wrapperObjectSample = $0
+                    let kvcDict = wrapperObjectSample.kvcObject as? Dictionary<String, Any>
                     
                     var bContainsKey = false
                     
@@ -533,24 +543,24 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if (self.allowSearch! && self.isSearching!)
+        if (self.allowSearch && self.isSearching)
         {
-            return self.searchArray!.count;
+            return self.searchArray.count;
         }
-        return internalResultsArray!.count;
+        return internalResultsArray.count;
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         var sectionObj : Dictionary<String, Array<WrapperObj>>
         
-        if (self.allowSearch! && self.isSearching!)
+        if (self.allowSearch && self.isSearching)
         {
-            sectionObj = self.searchArray![section]
+            sectionObj = self.searchArray[section]
         }
         else
         {
-            sectionObj = self.internalResultsArray![section]
+            sectionObj = self.internalResultsArray[section]
         }
         
         let sectionRows = sectionObj.values.first
@@ -580,7 +590,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         if (cell == nil)
         {
             var style : UITableViewCellStyle
-            if (self.showGroupedView)!
+            if (self.showGroupedView)
             {
                 style = UITableViewCellStyle.default
             }
@@ -592,35 +602,37 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             cell = UITableViewCell.init(style: style, reuseIdentifier: cellID)
         }
         
-        let biggerArrayToIndex = (self.allowSearch! && self.isSearching!) ? self.searchArray : self.internalResultsArray
-        let sectionObj = biggerArrayToIndex![indexPath.section] as! Dictionary<String, Array<WrapperObj>>
+        let biggerArrayToIndex = (self.allowSearch && self.isSearching) ? self.searchArray : self.internalResultsArray
+        let sectionObj = biggerArrayToIndex[indexPath.section]
         let rowArray = sectionObj.values.first
         
-        let wrapperObj = rowArray![indexPath.row] as! WrapperObj
+        let wrapperObj = rowArray![indexPath.row]
         let kvcObject = wrapperObj.kvcObject
         
-        let title = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelKeys!, formatArray: self.textLabelFormats!, separator: self.textLabelSeparator!)
-        let subTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.subTitleKeys!, formatArray: self.subTitleFormats!, separator: self.subTitleSeparator!)
-        
-        if (self.showGroupedView)!
+        let title = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelKeys, formatArray: self.textLabelFormats, separator: self.textLabelSeparator)
+        let subTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.subTitleKeys, formatArray: self.subTitleFormats, separator: self.subTitleSeparator)
+       
+        if (self.showGroupedView)
         {
+            cell?.textLabel?.numberOfLines = 0
+            cell?.textLabel?.lineBreakMode = .byWordWrapping
+            
             if (self.isTitleDisplayedOnPreviousRow(rowsArray: rowArray!, index: indexPath.row, title: title))
             {
-                cell?.textLabel?.text = String(format:"%@\n     %@", "", subTitle)
+                cell?.textLabel?.text = String(format:"%@\n↳%@", "", subTitle)
             }
             else
             {
-                cell?.textLabel?.text = String(format:"%@\n     %@", title, subTitle)
+                cell?.textLabel?.text = String(format:"%@\n↳%@", title, subTitle)
             }
         }
         else
         {
             cell?.textLabel?.text = title
-            let subTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.subTitleKeys!, formatArray: self.subTitleFormats!, separator: self.subTitleSeparator!)
             cell?.detailTextLabel?.text = subTitle
         }
         
-        cell?.backgroundColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle?.rawValue)!]
+        cell?.backgroundColor = self.cellColorArray?[indexPath.row % (self.cellColorStyle.rawValue)]
         cell?.textLabel?.textColor = UIColor.darkText
         cell?.detailTextLabel?.textColor = UIColor.darkText
         
@@ -636,7 +648,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         //2 - Update UI - Cell accessory button image
         let cell = self.tableView.cellForRow(at: indexPath)
         
-        if (self.allowSelectionCheckMark! == true)
+        if (self.allowSelectionCheckMark == true)
         {
             cell?.accessoryType = (bToCheck == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         }
@@ -649,7 +661,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         //3 - Reload Table Data from data source, and update bar buttons
         self.tableView.reloadData()
-        //[self updateBarButtonStatus];
+        self.updateBarButtonStatus()
     }
     
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
@@ -661,9 +673,9 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
             let alertController = UIAlertController.init(title: self.accessoryPromptTitle, message: "", preferredStyle: UIAlertControllerStyle.alert)
         
-            let displayValueToDelete = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelKeys!, formatArray: self.textLabelFormats!, separator: "")
+            let displayValueToDelete = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelKeys, formatArray: self.textLabelFormats, separator: "")
         
-            alertController.message = String.init(format: self.accessoryPromptMessage!, displayValueToDelete)
+            alertController.message = String.init(format: self.accessoryPromptMessage, displayValueToDelete)
         
             let okAction = UIAlertAction.init(title: self.accessoryPromptOKButtonTitle!, style: UIAlertActionStyle.default) { (action) in
                 
@@ -690,7 +702,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             //2 - Update UI - Cell accessory button image
             let cell = self.tableView.cellForRow(at: indexPath)
         
-            if (self.allowSelectionCheckMark! == true)
+            if (self.allowSelectionCheckMark == true)
             {
                 cell?.accessoryType = (bToCheck == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
             }
@@ -715,7 +727,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK)
         {
-            if (self.allowSelectionCheckMark! == true)
+            if (self.allowSelectionCheckMark == true)
             {
                 cell.accessoryType = (wrapperObjSelected == true) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
                 return
@@ -767,20 +779,20 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                 wrapperObj.selected = bToCheck
                 let kvcObject = wrapperObj.kvcObject
                 
-                if let idx = selectedObjects?.index(where: {
+                if let idx = selectedObjects.index(where: {
                     ($0 === kvcObject)
                 })
                 {
                     if (bToCheck == false)
                     {
-                        selectedObjects?.remove(at: idx)
+                        selectedObjects.remove(at: idx)
                     }
                 }
                 else
                 {
                     if (bToCheck == true)
                     {
-                        selectedObjects?.append(kvcObject)
+                        selectedObjects.append(kvcObject)
                     }
                 }
             }
@@ -807,7 +819,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         var kvcObjectDeleted : AnyObject!
         let wrapperObj = self.getWrapperObjectFromIndexPath(indexPath: indexPath)
-        var rowArray = self.getArrayToIndexFroomIndexPath(indexPath: indexPath, bIgnoreSearchCondition: false)
+        var rowArray = self.getArrayToIndexFromIndexPath(indexPath: indexPath, bIgnoreSearchCondition: false)
         
         if (self.accessoryAction == ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE)
         {
@@ -816,19 +828,19 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             })
             {
                 let kvcObject = wrapperObj.kvcObject
-                self.accessoryActionResultsArray?.append(kvcObject)
+                self.accessoryActionResultsArray.append(kvcObject)
    
-                if (self.allowSearch! && self.isSearching!)
+                if (self.allowSearch && self.isSearching)
                 {
-                    var searchSectionObj = self.searchArray![indexPath.section]
+                    var searchSectionObj = self.searchArray[indexPath.section]
                     var key = searchSectionObj.keys.first
                     rowArray.remove(at: idx)
                     searchSectionObj[key!] = rowArray
-                    self.searchArray![indexPath.section] = searchSectionObj
+                    self.searchArray[indexPath.section] = searchSectionObj
                     
                     var internalSectionDict : Dictionary<String, Array<WrapperObj>> = ["" : []]
                     
-                    if let sectionIdx = self.internalResultsArray?.index(where: {
+                    if let sectionIdx = self.internalResultsArray.index(where: {
                         
                         (eachSectionObj) -> Bool in
                         
@@ -850,16 +862,16 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
                         return bRetVal
                     })
                     {
-                        self.internalResultsArray![sectionIdx] = internalSectionDict
+                        self.internalResultsArray[sectionIdx] = internalSectionDict
                     }
                 }
                 else
                 {
-                    var sectionObj = self.internalResultsArray![indexPath.section]
+                    var sectionObj = self.internalResultsArray[indexPath.section]
                     let key = sectionObj.keys.first
                     kvcObjectDeleted = rowArray.remove(at: idx).kvcObject
                     sectionObj[key!] = rowArray
-                    self.internalResultsArray![indexPath.section] = sectionObj
+                    self.internalResultsArray[indexPath.section] = sectionObj
                 }
             }
         }
@@ -879,20 +891,20 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             bToCheck = !wrapperObj.selected;
             wrapperObj.selected = bToCheck;
             
-            if let idx = selectedObjects?.index(where: {
+            if let idx = selectedObjects.index(where: {
                 ($0 === kvcObject)
             })
             {
                 if (bToCheck == false)
                 {
-                    selectedObjects?.remove(at: idx)
+                    selectedObjects.remove(at: idx)
                 }
             }
             else
             {
                 if (bToCheck == true)
                 {
-                    selectedObjects?.append(kvcObject)
+                    selectedObjects.append(kvcObject)
                 }
             }
         }
@@ -900,34 +912,34 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         return bToCheck
     }
     
-    func getArrayToIndexFroomIndexPath (indexPath : IndexPath, bIgnoreSearchCondition: Bool) -> Array<WrapperObj>
+    func getArrayToIndexFromIndexPath (indexPath : IndexPath, bIgnoreSearchCondition: Bool) -> Array<WrapperObj>
     {
         var sectionObj : Dictionary<String, Array<WrapperObj>>
         
-        if (self.allowSearch! && self.isSearching!)
+        if (self.allowSearch && self.isSearching)
         {
             if (bIgnoreSearchCondition)
             {
-                sectionObj  = self.internalResultsArray![indexPath.section]
+                sectionObj  = self.internalResultsArray[indexPath.section]
             }
             else
             {
-                sectionObj = self.searchArray![indexPath.section]
+                sectionObj = self.searchArray[indexPath.section]
             }
         }
         else
         {
-            sectionObj = self.internalResultsArray![indexPath.section]
+            sectionObj = self.internalResultsArray[indexPath.section]
         }
         
-        var arrayToIndex = sectionObj.values.first
+        let arrayToIndex = sectionObj.values.first
         
         return arrayToIndex!
     }
     
     func allCheckedWithSectionObj (sectionObj : Dictionary<String, Array<WrapperObj>>) -> Bool
     {
-        var arrayToIndex = sectionObj.values.first
+        let arrayToIndex = sectionObj.values.first
         
        let notCheckedCount = arrayToIndex?.filter({ (wrapperObj) -> Bool in
             return (wrapperObj.selected == false)
@@ -940,15 +952,13 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         var sectionObj : Dictionary<String, Array<WrapperObj>>
         
-        var topLevelArrayToIndex = (self.allowSearch! && self.isSearching!) ? self.searchArray : self.internalResultsArray
-        
-        if (self.allowSearch! && self.isSearching!)
+        if (self.allowSearch && self.isSearching)
         {
-            sectionObj = self.searchArray![section]
+            sectionObj = self.searchArray[section]
         }
         else
         {
-            sectionObj = self.internalResultsArray![section]
+            sectionObj = self.internalResultsArray[section]
         }
         
         return sectionObj
@@ -959,19 +969,19 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         let sectionObj = self.getSectionObjFromSection(section: indexPath.section)
         
         var arrayToIndex = sectionObj.values.first
-        var wrapperObj = arrayToIndex![indexPath.row]
+        let wrapperObj = arrayToIndex![indexPath.row]
         
         return wrapperObj
     }
     
     func isTitleDisplayedOnPreviousRow (rowsArray : Array<Any>, index : Int, title : String) -> Bool
     {
-        var idx = index
+        var idx = index - 1
         while (idx > 0)
         {
             let wrapperObj = rowsArray[idx] as! WrapperObj
             let kvcObject = wrapperObj.kvcObject
-            let previousTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelFormats!, formatArray:self.textLabelFormats!, separator: self.textLabelSeparator!)
+            let previousTitle = self.getFormattedStringFromDisplayKeys(kvcObject: kvcObject, displayKeyArray: self.textLabelKeys, formatArray:self.textLabelFormats, separator: self.textLabelSeparator)
             
             if (previousTitle == title)
             {
@@ -988,7 +998,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         if (kvcObject is String)
         {
-            if ((formatArray ?? []).isEmpty == false)
+            if (formatArray.isEmpty == false)
             {
                 let format = formatArray.first
                 let valueToFormat = kvcObject as! String
@@ -1001,7 +1011,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
         
         if (kvcObject is NSNumber)
         {
-            if ((formatArray ?? []).isEmpty == false)
+            if (formatArray.isEmpty == false)
             {
                 let format = formatArray.first
                 let valueToFormat = kvcObject as! String
@@ -1044,14 +1054,17 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     {
         if (kvcObject is Dictionary<String, AnyObject>)
         {
-            let obj = (kvcObject as! Dictionary<String, AnyObject>)[key] as! NSObject
-            
-            return obj.description
+            if let obj = (kvcObject as! Dictionary<String, AnyObject>)[key] as? NSObject
+            {
+                return obj.description
+            }
         }
         else if (kvcObject is NSDictionary)
         {
-            let obj = (kvcObject as! NSDictionary) .object(forKey: key) as! NSObject
-            return obj.description
+            if let obj = (kvcObject as! NSDictionary) .object(forKey: key) as? NSObject
+            {
+                return obj.description
+            }
         }
 
         return ""

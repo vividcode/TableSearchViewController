@@ -32,26 +32,50 @@ To create UITableView with above objects with possible search through rows also,
     
         tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  selectedKVCObjects, BOOL bExtraFlag)
         {
+	        //see what user checked on the presented table viewcontroller
             NSLog(@"%@", selectedKVCObjects);
         };
     
         UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
         [self presentViewController:navCtrl animated:YES completion:nil];
 
-When you run the above code, a viewcontroller pops up (presented) and allows you to select objects of your choices, like below.
+Following code can be used to delete objects from presented table view, and get their reference back in deletionDoneBlock.
 
-![alt text](https://github.com/vividcode/TableSearchViewController/blob/master/Resources/example1.png "Selectable Strings in table view")
-
-Upon pressing Select, TableSearchViewController gets dismissed, and tableSearchViewController.selectionDoneBlock block executes, and selected objects (NSString) are supplied inside the block as part of NSArray.
-
-Note that resultsArray dictinaries can also accept any NSObject derived objects, in which case you must supply specific property name to display in table rows.
-
-- This property name must be supplied in the property textLabelKeys which is an array of properties to display inside UITableViewCell textLabel.
-- Similarly, subTitleKeys array property holds properties to display inside UITableViewCell textLabel.
-- Display formats can be supplied using textLableFormats and subTitleFormats Arrays.
-- Searchable properties can be supplied using searchKeys Array property.
-- If array of NSDictionary is supplied as part of NSArray, all the above property values must correspond to dictionary keys.
+    	NSArray * firstSectionArray = @[@"one", @"two", @"two", @"three"];
+    	NSArray * secondSectionArray = @[@"one", @"three", @"five",  @"six",];
+    
+    	NSArray * resultsArray = @[@{@"First Section" : firstSectionArray}, @{@"Second Section" : secondSectionArray}];
+    
+    	TableSearchViewController * tableSearchViewController = [[TableSearchViewController alloc] initWithCellColorStyle:CELL_COLOR_STYLE_ALTERNATE_DOUBLE andSectionColorStyle:SECTION_COLOR_STYLE_UNIFORM andAllowSelectionCheckMark:NO andAllowSelectAllCheckBox:YES andAllowSearch:YES andAccessoryAction:ACCESSORY_ACTION_DELETE andFooterText:@"" andResultsArray:resultsArray];
+    
+    	tableSearchViewController.selectionDoneBlock = ^(NSArray* _Nullable  deletedKVCObjects, BOOL bExtraFlag)
+    	{
+    		//get all deleted objects here
+        	NSLog(@"%@", deletedKVCObjects);
+        	_valueLabel.text = [NSString stringWithFormat:@"%@", [deletedKVCObjects componentsJoinedByString:@","]];
+    	};
+    
+    	tableSearchViewController.accessoryActionDoneBlock = ^(NSArray* _Nullable  accessoryActionKVCObjects)
+    	{
+    		//get what was just deleted using row delete button
+        	NSLog(@"%@", accessoryActionKVCObjects);
+        	_valueLabel.text = [NSString stringWithFormat:@"Deleted: %@", [accessoryActionKVCObjects componentsJoinedByString:@","]];
+    	};
+    
+    	UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tableSearchViewController];
+    	[self presentViewController:navCtrl animated:YES completion:nil];
 
 For elaborate example of how various objects can be displayed inside TableSearchViewController, see example project. 
 
-This readme refers to Objective C. The swift counterpart is still evolving due to Key value coding not readily available for Swift objects.
+There are lot of UI customizations possible using properties such as: 
+
+- showGroupedView (show Windows explorer type tree structure)
+- cellColorStyle (CELL_COLOR_STYLE_UNIFORM - all cells with same color, CELL_COLOR_STYLE_ALTERNATE_DOUBLE - 2 colors alternate, CELL_COLOR_STYLE_ALTERNATE_TRIPLE - 3 colors alternate)
+- textLabelKeys (row titles from dictionary keys)
+- subTitleKeys (row subtitles from dictionary keys)
+- textLabelFormats (row title formats)
+- subTitleFormats (row subtitle formats)
+
+**A Note about tests:**
+Test project is already part of the XCodeproj - hence no separate tests are included. The test results greatly depend on what user selects/deletes in the UI, so XCTest would make little sense. 
+UI automation tests are beyond scope.

@@ -1,17 +1,14 @@
-**Caveat:**
-Swift TableSearchViewController is freshly under porting effort and many APIs do not work same as Objective C counterpart. This is constantly under updates and should be fully functional very soon.
-
 **TableSearchViewController:**
 
 TableSearchViewController is a powerful UIViewController with easy to initialize interface. 
 
 All you have to do is:
 
-- Supply your rows inside a special NSArray of NSDictionaries with <Section Name (String) : Rows Array (String/NSNumbers/NSDictionaries NSArray)>
+- Supply your rows inside a special Array of Dictionaries with <Section Name (String) : Rows Array (of String/Numbers/Dictionaries)>
 - Supply cell and section formatting style
 - Supply selection button criteria (in addition to select / delete flag)
-- Supply Search flag
-- Supply blocks of record selection/deletion and cancel operation
+- Supply Search flag (should search bar be visible on top)
+- Supply blocks of record selection/deletion and cancel operation (these blocks will receive arrays containing selected / deleted objects)
 
 All of the above can be accomplished in just few lines of code, like below:
 
@@ -24,14 +21,15 @@ All of the above can be accomplished in just few lines of code, like below:
 | three         | six           |
 |               | seven            |
 
-To create UITableView with above objects with possible search through rows also, use the following code:
+To create UITableView with above objects (with possible search through rows, checkmark for rows), use the following code:
 
         let resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
 
-        let tableVC = TableSearchViewController.init(cellColorStyle: CellColorStyle.CELL_COLOR_STYLE_UNIFORM, sectionColorStyle: SectionColorStyle.SECTION_COLOR_STYLE_UNIFORM, allowSelectionCheckMark: false, allowSelectAllImage: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, footerText: "This is extra footer", resultsArray: resultsArray)
+        let tableVC = TableSearchViewController.init(allowSelectionCheckMark: false, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, resultsArray: resultsArray)
         
+        //Specify what happens when "Select" is pressed and TableSearchViewController is dismissed
         tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
-            
+            //see what user checked on the presented table viewcontroller
             let str = "Selected: " + selectedObjects.description
             self.resultLabel.text? = str
             print("Selected:\(str)")
@@ -40,5 +38,42 @@ To create UITableView with above objects with possible search through rows also,
         let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
         
         self.navigationController?.present(tableNavVC, animated: true, completion: {
-            print("presented")
         })
+        
+Following code can be used to delete objects from presented table view, and get their reference back in deletionDoneBlock.
+
+        let resultsArray = [["First": ["one","two","three"]], ["Second": ["two","four","six","seven"]]]
+        
+        let tableVC = TableSearchViewController.init(allowSelectionCheckMark: false, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE, resultsArray: resultsArray)
+        
+        //Specify what happens when "Done" is pressed and TableSearchViewController is dismissed
+        tableVC.selectionDoneBlock = { deletedObjects, bExtraFlag in
+            
+            let str = "All Deleted: " + (deletedObjects as Array<Any>).description
+            self.resultLabel.text? = str
+            print("Deleted:\(str)")
+        }
+        
+        tableVC.deletionDoneBlock = { kvcObjectDeleted in
+            let str = "Deleted Now: " + (kvcObjectDeleted as! String)
+            self.resultLabel.text? = str
+            print("Deleted:\(str)")
+        }
+
+        let tableNavVC  = UINavigationController.init(rootViewController: tableVC)
+        
+        self.navigationController?.present(tableNavVC, animated: true, completion: {
+        })
+        
+There are lot of UI customizations possible using properties such as: 
+
+- showGroupedView (show Windows explorer type tree structure)
+- cellColorStyle (CELL_COLOR_STYLE_UNIFORM - all cells with same color, CELL_COLOR_STYLE_ALTERNATE_DOUBLE - 2 colors alternate, CELL_COLOR_STYLE_ALTERNATE_TRIPLE - 3 colors alternate)
+- textLabelKeys (row titles from dictionary keys)
+- subTitleKeys (row subtitles from dictionary keys)
+- textLabelFormats (row title formats)
+- subTitleFormats (row subtitle formats)
+
+**A Note about tests:**
+Test project is already part of the XCodeproj - hence no separate tests are included. The test results greatly depend on what user selects/deletes in the UI, so XCTest would make little sense. 
+UI automation tests are beyond scope.
