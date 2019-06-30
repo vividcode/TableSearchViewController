@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         let tableVC = TableSearchViewController.init(allowSelectionCheckMark: false, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_CHECK, resultsArray: resultsArray)
         
         //Specify what happens when "Select" is pressed and TableSearchViewController is dismissed
-        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+        tableVC.selectionDoneBlock = { selectedObjects in
             
             let str = "Selected: " + selectedObjects.description
             self.resultLabel.text? = str
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         
         
         //Specify what happens when "Select" is pressed and TableSearchViewController is dismissed
-        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+        tableVC.selectionDoneBlock = { selectedObjects in
             
             let str = "Selected: " + selectedObjects.description
             self.resultLabel.text? = str
@@ -89,7 +89,7 @@ class ViewController: UIViewController {
         tableVC.subTitleFormats = ["num is here: %@"]
         
         //Specify what happens when "Select" is pressed and TableSearchViewController is dismissed
-        tableVC.selectionDoneBlock = { selectedObjects, bExtraFlag in
+        tableVC.selectionDoneBlock = { selectedObjects in
             let str = "Selected: " + selectedObjects.description
             self.resultLabel.text? = str
             print("Selected:\(str)")
@@ -108,7 +108,7 @@ class ViewController: UIViewController {
         let tableVC = TableSearchViewController.init(allowSelectionCheckMark: false, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE, resultsArray: resultsArray)
         
         //Specify what happens when "Done" is pressed and TableSearchViewController is dismissed
-        tableVC.selectionDoneBlock = { deletedObjects, bExtraFlag in
+        tableVC.selectionDoneBlock = { deletedObjects in
             
             let str = "All Deleted: " + (deletedObjects as Array<Any>).description
             self.resultLabel.text? = str
@@ -135,7 +135,7 @@ class ViewController: UIViewController {
         let tableVC = TableSearchViewController.init(allowSelectionCheckMark: true, allowSearch: true, accessoryAction: ACCESSORY_ACTION.ACCESSORY_ACTION_DELETE, resultsArray: resultsArray)
         
         //Specify what happens when "Done" is pressed and TableSearchViewController is dismissed
-        tableVC.selectionDoneBlock = { deletedObjects, bExtraFlag in
+        tableVC.selectionDoneBlock = { deletedObjects in
             let str = "All Deleted: " + (deletedObjects as Array<Any>).description
             self.resultLabel.text? = str
             print("Deleted:\(str)")
@@ -184,7 +184,7 @@ class ViewController: UIViewController {
         tableVC.showGroupedView = true
         
         //Specify what happens when "Done" is pressed and TableSearchViewController is dismissed
-        tableVC.selectionDoneBlock = { deletedObjects, bExtraFlag in
+        tableVC.selectionDoneBlock = { deletedObjects in
             
             var str = ""
             for dict in deletedObjects
