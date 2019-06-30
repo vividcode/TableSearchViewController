@@ -283,7 +283,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
             self.sectionColorStyle = sectionColorStyle
         }
         
-        self.screenTitle = ""
+        self.screenTitle = "My List"
         self.selectionDoneButtonTitle = "Select"
         self.dismissButtonTitle = "Cancel"
         self.sectionHeaderHeight = CGFloat(SECTION_HEADER_HEIGHT)
@@ -307,6 +307,7 @@ class TableSearchViewController: UIViewController, UITableViewDelegate, UITableV
     // MARK: NAV BAR
     func configureNavBar()
     {
+        self.navigationItem.title = self.screenTitle
         if (!self.selectionDoneButtonTitle.isEmpty)
         {
             let doneButton = UIBarButtonItem.init(title: self.selectionDoneButtonTitle, style: UIBarButtonItemStyle.done, target: self, action: #selector(self.doneTapped))

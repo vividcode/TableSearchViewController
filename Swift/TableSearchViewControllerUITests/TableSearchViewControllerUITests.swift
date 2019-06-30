@@ -26,31 +26,130 @@ class TableSearchViewControllerUITests: XCTestCase {
         XCUIApplication().terminate()
     }
 
-    func testLoadStringsResults() {
-        let app = XCUIApplication()
+    func testTableAppearancesForString()
+    {
+        self.launchTSVCWithCommand(command: "Load Strings")
         sleep(1)
-        let searchText = "Load Strings"
-        let predicate = NSPredicate(format: "label CONTAINS[c] %@", searchText)
+        self.testTableAppearanceForCommand(desiredIdx: 5, desiredCellText: "Six")
+        self.discardTSVC()
+    }
+    
+    func testTableAppearancesForNumbers()
+    {
+        self.launchTSVCWithCommand(command: "Load Numbers")
+        sleep(1)
+        self.testTableAppearanceForCommand(desiredIdx: 2, desiredCellText: "3")
+        self.discardTSVC()
+    }
+    
+    func testTableAppearancesForDictionaries()
+    {
+        self.launchTSVCWithCommand(command: "Load Dictionaries")
+        sleep(1)
+        self.testTableAppearanceForCommand(desiredIdx: 4, desiredCellText: "lovelyapple")
+        self.discardTSVC()
+    }
+    
+    func testSelectionForStrings()
+    {
+        sleep(1)
+        self.launchTSVCWithCommand(command: "Load Strings")
+        self.tapAccessoryAtIndex(idx: 3)
+        self.pressSelect()
+        sleep(1)
         
-        let elementQuery = app.buttons.containing(predicate)
-        if elementQuery.count > 0
+        let app = XCUIApplication()
+        
+        //
+
+        let labelQuery = app.staticTexts["resultLabel"]
+        let value = labelQuery.label
+        XCTAssertTrue(value.contains("two"))
+    }
+    
+    func discardTSVC()
+    {
+        let app = XCUIApplication()
+   //     let predicate = NSPredicate(format: "label CONTAINS[c] %@", "Cancel")
+        
+        let navBar = app.navigationBars["My List"]
+        
+        let predicate = NSPredicate(format: "label CONTAINS[c] %@", "Cancel")
+        let btnQuery = navBar.buttons.containing(predicate)
+        
+        if btnQuery.count > 0
         {
-            let label = elementQuery.element(boundBy: 1)
-            label.tap()
+            let button = btnQuery.element(boundBy: 0)
+            button.tap()
+        }
+    }
+    
+    func pressSelect()
+    {
+        let app = XCUIApplication()
+        //     let predicate = NSPredicate(format: "label CONTAINS[c] %@", "Cancel")
+        
+        let navBar = app.navigationBars["My List"]
+        
+        let predicate = NSPredicate(format: "label CONTAINS[c] %@", "Select")
+        let btnQuery = navBar.buttons.containing(predicate)
+        
+        if btnQuery.count > 0
+        {
+            let button = btnQuery.element(boundBy: 0)
+            button.tap()
+        }
+    }
+    
+    func launchTSVCWithCommand(command: String)
+    {
+        let app = XCUIApplication()
+        let predicate = NSPredicate(format: "label == %@", command)
+        
+        let btnQuery = app.buttons.containing(predicate)
+        if btnQuery.count > 0
+        {
+            let button = btnQuery.element(boundBy: 0)
+            button.tap()
         }
         else
         {
             return
         }
-       
+    }
+    
+    func tapAccessoryAtIndex(idx: Int)
+    {
+        let app = XCUIApplication()
+        let table = app.tables.element
+        
+        let cell = table.cells.element(boundBy: idx)
+        let btnQuery = cell.buttons
+        
+        if btnQuery.count > 0
+        {
+            let button = btnQuery.element(boundBy: 0)
+            button.tap()
+        }
+        else
+        {
+            return
+        }
+    }
+    
+    func testTableAppearanceForCommand(desiredIdx: Int, desiredCellText: String)
+    {
+        let app = XCUIApplication()
         
         let table = app.tables.element
         XCTAssertTrue(table.exists)
         
-        let cell = table.cells.element(boundBy: 5)
+        
+        let cell = table.cells.element(boundBy: desiredIdx)
         XCTAssertTrue(cell.exists)
         
-        let indexedText = cell.staticTexts["six"]
+        let cellPredicate = NSPredicate(format: "label CONTAINS[c] %@", desiredCellText)
+        let indexedText = cell.staticTexts.element(matching: cellPredicate)
         XCTAssertTrue(indexedText.exists)
     }
 

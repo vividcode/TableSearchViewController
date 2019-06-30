@@ -23,7 +23,6 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJF-PZ-uaA">
                                 <rect key="frame" x="0.0" y="60" width="375" height="30"/>
-                                <accessibility key="accessibilityConfiguration" label="Load Strings"/>
                                 <state key="normal" title="Load Strings"/>
                                 <connections>
                                     <action selector="loadStrings:" destination="9DN-PF-3Gv" eventType="touchUpInside" id="X11-jY-IIu"/>
@@ -59,6 +58,7 @@
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3L-aM-YG2">
                                 <rect key="frame" x="0.0" y="587" width="375" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="resultLabel"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="rCi-Zn-8zF"/>
                                 </constraints>
