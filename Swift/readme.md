@@ -76,5 +76,4 @@ There are lot of UI customizations possible using properties such as:
 
 **A Note about tests:**
 
-Test project is already part of the XCodeproj - hence no separate tests are included. The test results greatly depend on what user selects/deletes in the UI, so XCTest would make little sense. 
-UI automation tests are beyond scope.
+Test project is already part of the XCodeproj - UI automation tests are created (TableSearchViewControllerUITests) as wrappers to test project because Testproject is standard utility way for this component.
