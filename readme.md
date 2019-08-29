@@ -18,7 +18,7 @@ Following kind of table view layout is created with default configuration:
   <br>
  </p>
  <p align="center">
-  <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Selection.png" width="300" height="550" alt="Select">
+  <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/selection.png" width="300" height="550" alt="Select">
     <br>
  </p>
 
