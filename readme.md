@@ -15,11 +15,15 @@ Following kind of table view layout is created with default configuration:
 
 <p align="left">
   <strong>Search</strong>
+      <br>
+    <br>
   <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Search.png" width="300" height="550" title="Search">
   <br>
  </p>
  <p align="left">
     <strong>Selection</strong>
+    <br>
+    <br>
   <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/selection.png" width="300" height="550" alt="Select">
     <br>
  </p>
