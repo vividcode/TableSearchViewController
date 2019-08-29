@@ -11,11 +11,14 @@ https://github.com/vividcode/TableSearchViewController/blob/master/Swift/readme.
 
 Following kind of table view layout is created with default configuration:
 
-![Search](https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Search.png)
 
-![Select](https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/selection.png)
 
 <p align="center">
   <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Search.png" width="300" height="550" title="Search">
-  <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Search.png" width="300" height="550" alt="Select">
-</p>
+  <br>
+ </p>
+ <p align="center">
+  <img src="https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Selection.png" width="300" height="550" alt="Select">
+    <br>
+ </p>
+
