@@ -8,3 +8,9 @@ Individual readme.md can be found at:
 https://github.com/vividcode/TableSearchViewController/blob/master/Objective%20C/readme.md
 
 https://github.com/vividcode/TableSearchViewController/blob/master/Swift/readme.md
+
+Following kind of table view layout is created with default configuration:
+
+![Search](https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/Search.png)
+
+![Select](https://github.com/vividcode/TableSearchViewController/blob/master/Screenshots/selection.png)
